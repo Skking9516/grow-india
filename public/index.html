@@ -1,0 +1,980 @@
+<title>Grow India</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hind:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap">
+
+<style>
+:root{
+  --bg:#f4f6f2;--surface:#ffffff;--surface2:#e9eee7;--fg:#13201a;--muted:#58675e;--line:#d6dfd4;
+  --accent:#0b6b49;--accent-fg:#ffffff;--saffron:#b85a0a;--saffron-bg:#fdf0e1;
+  --up:#0b7f55;--down:#bf3a2c;--shadow:0 -8px 30px rgba(10,30,20,.18);
+  --font-body:'Hind','Noto Sans Devanagari',system-ui,sans-serif;
+  --font-display:'Poppins','Hind',system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0c1411;--surface:#142019;--surface2:#1b2b22;--fg:#e8f0ea;--muted:#9bb0a3;--line:#27382e;
+  --accent:#35c28a;--accent-fg:#06150e;--saffron:#f0a35a;--saffron-bg:#2b2012;
+  --up:#3fd08f;--down:#ff7a6b;--shadow:0 -8px 30px rgba(0,0,0,.55);color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0c1411;--surface:#142019;--surface2:#1b2b22;--fg:#e8f0ea;--muted:#9bb0a3;--line:#27382e;
+  --accent:#35c28a;--accent-fg:#06150e;--saffron:#f0a35a;--saffron-bg:#2b2012;
+  --up:#3fd08f;--down:#ff7a6b;--shadow:0 -8px 30px rgba(0,0,0,.55);color-scheme:dark}
+
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--fg);font-family:var(--font-body);font-size:16px;line-height:1.5;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--surface);z-index:30}
+button,input,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--saffron);outline-offset:2px}
+.wrap{max-width:480px;margin:0 auto;min-width:0}
+.num{font-variant-numeric:tabular-nums}
+
+/* header */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;margin-inline:calc(-1 * max(16px,env(safe-area-inset-left,0px)));
+  padding-inline:max(16px,env(safe-area-inset-left,0px));background:var(--surface);border-bottom:1px solid var(--line)}
+.top-in{max-width:480px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:10px 0 6px}
+.brand{font-family:var(--font-display);font-weight:700;font-size:20px;letter-spacing:-.01em;color:var(--accent)}
+.brand b{color:var(--saffron);font-weight:700}
+.chip{font-size:12px;font-weight:600;letter-spacing:.04em;padding:3px 10px;border-radius:99px;background:var(--saffron-bg);color:var(--saffron)}
+.demo-note{max-width:480px;margin:0 auto;padding:0 0 8px;font-size:13px;color:var(--muted)}
+
+/* auth */
+.auth{padding:28px 0 40px;display:grid;gap:20px}
+.auth h1{font-family:var(--font-display);font-size:28px;line-height:1.2;margin:0;text-wrap:balance}
+.auth p.lead{margin:6px 0 0;color:var(--muted)}
+.seg{display:grid;grid-template-columns:1fr 1fr;background:var(--surface2);border-radius:12px;padding:4px;gap:4px}
+.seg button{border:0;background:transparent;padding:10px;border-radius:9px;font-weight:600;color:var(--muted)}
+.seg button[aria-selected="true"]{background:var(--surface);color:var(--fg);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.form{display:grid;gap:14px}
+label.f{display:grid;gap:6px;font-weight:600;font-size:14px}
+label.f input{width:100%;padding:13px 14px;border:1.5px solid var(--line);border-radius:12px;background:var(--surface);font-size:16px;font-weight:500}
+label.f input:focus{border-color:var(--accent);outline:none;box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 25%,transparent)}
+.hint{font-weight:400;color:var(--muted);font-size:13px}
+.err{color:var(--down);font-size:14px;min-height:1.4em;margin:0}
+.btn{border:0;background:var(--accent);color:var(--accent-fg);padding:14px 18px;border-radius:12px;font-weight:700;font-size:16px;width:100%}
+.btn:active{transform:translateY(1px)}
+.btn.ghost{background:var(--surface2);color:var(--fg)}
+.btn.sm{width:auto;padding:8px 14px;font-size:14px;border-radius:10px}
+
+/* app */
+main{padding:16px 0 112px;display:grid;gap:18px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px}
+.bal{background:var(--accent);color:var(--accent-fg);border:0}
+.bal small{opacity:.85}
+.bal .amt{font-family:var(--font-display);font-size:34px;font-weight:700;line-height:1.15;margin:2px 0}
+h2{font-family:var(--font-display);font-size:17px;margin:0 0 10px;font-weight:600}
+.assets{display:grid;gap:8px}
+.asset{display:grid;grid-template-columns:44px 1fr auto;gap:12px;align-items:center;text-align:left;width:100%;
+  background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px}
+.asset:hover{border-color:var(--accent)}
+.badge{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;font-family:var(--font-display);font-weight:700;font-size:12px;
+  background:var(--surface2);color:var(--accent)}
+.asset .nm{font-weight:600;line-height:1.25}
+.asset .sub{font-size:13px;color:var(--muted)}
+.asset .pr{text-align:right;font-weight:600}
+.pct{font-size:13px;font-weight:600}
+.up{color:var(--up)}.down{color:var(--down)}
+.strip{display:flex;justify-content:space-between;align-items:center;gap:12px;background:var(--saffron-bg);color:var(--saffron);
+  border-radius:14px;padding:12px 14px;font-weight:600;border:0;width:100%;text-align:left}
+.list{display:grid;gap:0}
+.row{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-top:1px solid var(--line);min-width:0}
+.row:first-child{border-top:0}
+.row .l{min-width:0}
+.row .l span{display:block;font-size:13px;color:var(--muted)}
+.empty{color:var(--muted);margin:0}
+.levels{display:grid;gap:10px}
+.lvl{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center}
+.lvl .pt{font-family:var(--font-display);font-weight:700;font-size:20px;color:var(--saffron)}
+.lvl .lb{width:34px;height:34px;border-radius:50%;background:var(--surface2);display:grid;place-items:center;font-weight:700;color:var(--accent)}
+.code{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--surface2);border-radius:12px;padding:12px 14px}
+.code strong{font-family:var(--font-display);font-size:22px;letter-spacing:.08em;user-select:all}
+.kv{display:grid;gap:0}
+.note{font-size:13px;color:var(--muted);margin:10px 0 0}
+a.link{color:var(--accent);font-weight:600;word-break:break-all}
+
+/* tabs */
+.tabs{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--surface);border-top:1px solid var(--line);
+  padding:6px max(16px,env(safe-area-inset-left,0px)) env(safe-area-inset-bottom,0px)}
+.tabs-in{max-width:480px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:4px}
+.tabs button{border:0;background:transparent;padding:10px 4px;border-radius:10px;font-weight:600;color:var(--muted);display:grid;gap:2px;justify-items:center;font-size:13px}
+.tabs svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.tabs button[aria-current="page"]{color:var(--accent);background:var(--surface2)}
+
+/* sheet */
+.veil{position:fixed;inset:0;z-index:40;background:rgba(5,15,10,.55);display:flex;align-items:flex-end;justify-content:center}
+.sheet{width:100%;max-width:480px;max-height:92%;overflow:auto;background:var(--surface);border-radius:20px 20px 0 0;box-shadow:var(--shadow);
+  padding:16px max(16px,env(safe-area-inset-left,0px)) calc(20px + env(safe-area-inset-bottom,0px))}
+.sh-h{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:8px}
+.sh-h h3{margin:0;font-family:var(--font-display);font-size:18px}
+.live{font-family:var(--font-display);font-size:26px;font-weight:700}
+.x{border:0;background:var(--surface2);width:36px;height:36px;border-radius:50%;font-size:20px;line-height:1}
+svg.spark{width:100%;height:96px;display:block;background:var(--surface2);border-radius:12px;margin:8px 0 14px}
+.dir{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:6px 0 12px}
+.dir button{padding:12px;border-radius:12px;border:2px solid var(--line);background:var(--surface);font-weight:700}
+.dir button.u[aria-pressed="true"]{border-color:var(--up);color:var(--up);background:color-mix(in srgb,var(--up) 12%,var(--surface))}
+.dir button.d[aria-pressed="true"]{border-color:var(--down);color:var(--down);background:color-mix(in srgb,var(--down) 12%,var(--surface))}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 12px}
+.chips button{border:1px solid var(--line);background:var(--surface2);border-radius:99px;padding:5px 14px;font-weight:600;font-size:14px}
+.cd{font-family:var(--font-display);font-size:56px;font-weight:700;line-height:1;text-align:center;margin:6px 0}
+.bar{height:8px;border-radius:99px;background:var(--surface2);overflow:hidden;margin:10px 0 14px}
+.bar i{display:block;height:100%;background:var(--accent);width:0;transition:width .9s linear}
+.res{text-align:center;padding:10px 0 4px}
+.res .big{font-family:var(--font-display);font-size:34px;font-weight:700}
+.wallet-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.wallet-actions button{border:0;border-radius:12px;padding:12px 10px;font-weight:700;background:var(--accent);color:var(--accent-fg)}
+.wallet-actions button.secondary{background:var(--surface2);color:var(--fg);border:1px solid var(--line)}
+.request-status{font-size:12px;color:var(--saffron);font-weight:700}
+.admin-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.admin-actions button{border:0;border-radius:9px;padding:8px 11px;font-weight:700;background:var(--accent);color:var(--accent-fg)}
+.admin-actions button.reject{background:var(--surface2);color:var(--down);border:1px solid var(--line)}
+.admin-stat{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.admin-stat .card{padding:12px}
+.admin-stat strong{font:700 22px var(--font-display)}
+.security-actions{display:grid;gap:9px}.bank-summary{padding:12px;background:var(--surface2);border-radius:12px}.bank-summary span{display:block;color:var(--muted);font-size:13px}.security-actions .btn{margin-top:2px}
+@media (prefers-reduced-motion:reduce){.bar i{transition:none}}
+
+/* Mobile layout and touch-friendly forms */
+html{width:100%;min-height:100%;-webkit-text-size-adjust:100%}
+body{width:100%;min-width:320px;overflow-x:hidden}
+.wrap{width:min(100%,520px);min-width:0}
+input,button{max-width:100%;touch-action:manipulation}
+input{min-width:0}
+@media(max-width:600px){
+ body{padding-left:max(12px,env(safe-area-inset-left));padding-right:max(12px,env(safe-area-inset-right));padding-top:0!important}
+ .wrap{width:100%;max-width:none;margin:0 auto;border-radius:0;overflow:visible;box-shadow:none}
+ .top{margin-left:calc(-1 * max(12px,env(safe-area-inset-left)));margin-right:calc(-1 * max(12px,env(safe-area-inset-right)));padding-left:max(12px,env(safe-area-inset-left));padding-right:max(12px,env(safe-area-inset-right))}
+ .top-in{width:100%;padding-top:12px}
+ main{padding-top:14px;padding-bottom:calc(100px + env(safe-area-inset-bottom));gap:13px}
+ .card{padding:15px;border-radius:17px}
+ .bal .amt{font-size:32px}
+ .tabs{padding-bottom:max(6px,env(safe-area-inset-bottom))}
+ .tabs-in{max-width:none}
+ .tabs button{min-height:54px;padding:8px 2px}
+ .veil{align-items:flex-end;padding:0}
+ .sheet{width:100%;max-width:none;max-height:88dvh;border-radius:20px 20px 0 0;padding:16px 16px calc(22px + env(safe-area-inset-bottom))}
+ .form{gap:12px}
+ label.f input{min-height:48px;font-size:16px}
+ .admin-actions{justify-content:flex-start}
+}
+@media(min-width:700px){.wrap{width:min(520px,calc(100vw - 32px))}}
+.form-grid{display:grid;grid-template-columns:1fr;gap:12px}
+.form-card{display:grid;gap:12px}
+.form-card .btn{margin-top:4px}
+.field-hint{font-size:12px;color:var(--muted);margin-top:-7px}
+
+
+/* Grow India — client presentation polish */
+:root{--bg:#f3f6f4;--surface:#fff;--surface2:#edf3ef;--fg:#10251b;--muted:#64756b;--line:#dce7df;--accent:#08764f;--saffron:#c47b28;--shadow:0 14px 38px rgba(12,42,27,.08)}
+body{background:linear-gradient(180deg,#eaf3ed 0,#f6f8f6 260px);font-size:15px}
+.wrap{max-width:520px}
+.top{box-shadow:0 4px 18px rgba(15,50,30,.05);backdrop-filter:blur(14px)}
+.top-in{max-width:520px;padding:14px 0 10px}
+.brand{font-size:23px;letter-spacing:-.8px}
+.chip{border-radius:999px}
+main{gap:15px;padding-top:20px}
+.card{border:1px solid #e2ebe5;border-radius:20px;padding:18px;box-shadow:0 7px 22px rgba(16,44,27,.045)}
+.bal{background:linear-gradient(135deg,#075d40,#0b8a5c);box-shadow:0 14px 28px rgba(8,118,79,.18)}
+.bal .amt{font-size:38px;letter-spacing:-1px;margin:7px 0}
+.asset{border-radius:16px;padding:14px;border-color:#e3ebe5;transition:transform .16s,border-color .16s,box-shadow .16s}
+.asset:hover{transform:translateY(-1px);box-shadow:0 7px 16px rgba(10,60,34,.07)}
+.badge{border-radius:14px}
+.btn,.wallet-actions button{border-radius:14px;box-shadow:0 5px 12px rgba(8,118,79,.12)}
+.btn.ghost{box-shadow:none}
+.tabs{box-shadow:0 -8px 28px rgba(14,45,27,.08);border-top:1px solid var(--line)}
+.auth{padding-top:38px}
+.auth h1{font-size:30px;letter-spacing:-.7px}
+.note,.demo-note{font-size:12px;line-height:1.55}
+.preview-status{display:flex;align-items:center;gap:8px;padding:10px 12px;border:1px solid #d9e8df;border-radius:13px;background:#f0f7f2;color:#315b43;font-size:12px;font-weight:600}
+.preview-status i{width:8px;height:8px;border-radius:50%;background:#d28b36;display:inline-block;flex:none}
+@media(min-width:700px){body{padding-top:24px}.wrap{margin:24px auto;background:rgba(255,255,255,.45);border-radius:24px;overflow:hidden;box-shadow:0 20px 70px rgba(10,40,22,.08)}}
+
+.tabs-in{grid-template-columns:repeat(4,minmax(0,1fr))}.tabs button{min-width:0;white-space:nowrap}.admin-nav{position:fixed;bottom:0;left:0;right:0;z-index:30;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;padding:7px 8px max(8px,env(safe-area-inset-bottom));background:var(--surface);border-top:1px solid var(--line)}.admin-nav button{min-width:0;min-height:44px;padding:6px 2px;border:1px solid var(--line);border-radius:9px;background:var(--surface2);color:var(--muted);font:inherit;font-size:11px}.admin-nav .selected{color:var(--accent);border-color:var(--accent)}main{padding-bottom:135px}.payment-image{display:block;width:240px;max-width:100%;max-height:330px;object-fit:contain;margin:12px auto;border-radius:10px}.inline-proof{grid-column:1/-1;min-width:0;width:100%;text-align:left;border-top:1px solid var(--line);padding-top:12px}.request-card{display:grid;grid-template-columns:1fr;gap:12px;padding:14px 0;overflow-wrap:anywhere}.request-card>div{min-width:0;text-align:left!important}.request-card .admin-actions{display:flex;flex-wrap:wrap;gap:7px}.deposit-timer{font-size:28px;color:var(--accent)}select{width:100%;padding:12px;background:var(--surface);color:var(--text);border:1px solid var(--line);border-radius:10px}@media(max-width:600px){.admin-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}.admin-actions button{font-size:11px;padding:9px 5px;min-height:40px}.admin-user-card{display:block}.admin-user-card>div{text-align:left!important}.admin-stat .card{padding:12px}.sh-h h2{font-size:19px}.request-card .btn{font-size:12px;padding:10px}.tabs button{font-size:12px}}.action-dialog{box-sizing:border-box;width:calc(100% - 28px);max-width:420px;max-height:90dvh;overflow:auto;margin:auto;border:1px solid var(--line);border-radius:22px;padding:22px;background:var(--surface);color:var(--text);box-shadow:0 24px 80px #0007}.action-dialog::backdrop{background:#0009;backdrop-filter:blur(4px)}.dialog-title{display:flex;align-items:center;justify-content:space-between;gap:10px}.dialog-title h2{font-size:21px;margin:0}.dialog-close{border:0;border-radius:50%;width:38px;height:38px;background:var(--surface2);color:var(--muted);font-size:25px}.dialog-actions{display:grid;grid-template-columns:1fr 1.4fr;gap:10px;margin-top:5px}.dialog-actions button{min-height:46px;font-size:14px}.wallet-summary{display:grid;gap:7px;padding:16px;border-radius:14px;background:var(--surface2);margin:6px 0}.wallet-summary span{font-size:13px;color:var(--muted)}.wallet-summary strong{font-size:25px;color:var(--accent)}.money-input{display:flex;align-items:center;gap:12px;border:1px solid var(--line);border-radius:14px;padding:10px 14px;background:var(--surface2)}.money-input>span{font-size:28px;color:var(--accent)}.action-dialog .money-input input{border:0;outline:0;background:transparent;box-shadow:none;width:100%;min-width:0;font-size:30px;padding:4px;color:inherit}.amount-options{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.amount-options button{min-height:42px;padding:7px 2px;background:var(--surface2);border:1px solid var(--line);border-radius:10px;color:var(--accent);font-size:12px}.action-dialog .pin-input{font-size:25px;text-align:center;letter-spacing:9px;min-height:56px;box-sizing:border-box}.action-dialog input{font-size:16px}.action-dialog .err:empty{display:none}.app-message{box-sizing:border-box;width:calc(100% - 40px);max-width:365px;margin:auto;padding:30px 23px 22px;border:1px solid var(--line);border-radius:25px;background:var(--surface);color:var(--text);text-align:center;box-shadow:0 25px 90px #0006;animation:message-enter .2s ease-out}.app-message::backdrop{background:#0009;backdrop-filter:blur(5px)}.message-mark{display:grid;place-items:center;width:66px;height:66px;margin:0 auto 19px;border-radius:50%;background:var(--surface2);color:var(--accent);border:1px solid var(--line)}.message-mark svg{width:34px;height:34px;fill:none;stroke:currentColor;stroke-width:2.3;stroke-linecap:round;stroke-linejoin:round}.message-info .message-mark{color:#d49b38}.app-message h2{font-size:21px;line-height:1.5;margin:0 0 10px}.app-message p{font-size:14px;line-height:1.8;color:var(--muted);overflow-wrap:anywhere;margin:9px 0}.app-message .message-amount{font-size:35px;font-weight:750;color:var(--accent);margin:12px 0}.app-message .message-note{font-size:12px;padding:10px;border-radius:11px;background:var(--surface2)}.app-message .message-ok{display:block;width:100%;min-height:46px;border-radius:13px;margin-top:23px;font-size:15px}.app-message button:focus-visible{outline:2px solid var(--accent);outline-offset:4px}#accountVeil .sheet{border-radius:22px;padding:22px;max-height:88dvh;overflow:auto}#accountVeil input[type=password]{font-size:19px;letter-spacing:4px;min-height:49px;box-sizing:border-box}#accountVeil input{font-size:16px}@keyframes message-enter{from{opacity:0;transform:translateY(10px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}@media(prefers-reduced-motion:reduce){.app-message{animation:none}}</style>
+
+<div id="app" class="wrap"></div>
+
+<script>
+/* ---- Edit these two lines to show your real help number and channel link on the Profile tab ---- */
+var CONFIG = { support: "", channel: "", channelTitle: "ऑफिशियल चैनल", depositTitle: "पैसे जमा करने की जानकारी", depositUrl: "", withdrawTitle: "पैसे निकालने की जानकारी", withdrawUrl: "", adTitle: "", adText: "", adImage: "", adUrl: "" };
+
+var START_BALANCE = 0, TRADE_SECONDS = 60, POINTS = [100, 50, 30], FIXED_PCT = 4, MIN_STAKE = 1000;
+var COMMISSION_RATES = [5, 3, 2];
+
+function today(){ return new Date().toDateString(); }
+var KEY = "growindia_demo_v1", memStore = null;
+
+function load(){
+  return { users: {}, session: null, settings: { transferEnabled: true, referralEnabled: true } };
+}
+var db = load();
+if(!db.settings) db.settings = {};
+if(db.settings.transferEnabled===undefined) db.settings.transferEnabled=true;
+if(db.settings.referralEnabled===undefined) db.settings.referralEnabled=true;
+Object.keys(CONFIG).forEach(function(k){ if(db.settings[k]!==undefined) CONFIG[k]=db.settings[k]; });
+
+// Save data to MongoDB Server (and keep session in sessionStorage so each browser tab/device has its own login session)
+function save(){
+  try {
+    if (db.session) sessionStorage.setItem(KEY + '_session', db.session);
+    else sessionStorage.removeItem(KEY + '_session');
+  } catch(e){}
+  
+  var payload = { users: db.users, settings: db.settings };
+  fetch('/api/save', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ data: payload })
+  }).catch(function(e){ console.error('Server save error:', e); });
+}
+
+async function initServerData(){
+  try {
+    var res = await fetch('/api/load');
+    var serverData = await res.json();
+    if (serverData && serverData.users) {
+      db.users = serverData.users;
+      db.settings = serverData.settings || {};
+    }
+  } catch(e) {
+    console.error('Server load error:', e);
+  }
+  if(!db.settings) db.settings = {};
+  if(db.settings.transferEnabled===undefined) db.settings.transferEnabled=true;
+  if(db.settings.referralEnabled===undefined) db.settings.referralEnabled=true;
+  Object.keys(CONFIG).forEach(function(k){ if(db.settings[k]!==undefined) CONFIG[k]=db.settings[k]; });
+  try {
+    var savedSession = sessionStorage.getItem(KEY + '_session');
+    if (savedSession && db.users[savedSession]) db.session = savedSession;
+  } catch(e){}
+  settleExpired();
+  onHash();
+}
+function hash(s){ var h = 5381; for (var i=0;i<s.length;i++) h = ((h<<5)+h+s.charCodeAt(i))|0; return String(h); }
+function inr(n){ return "₹" + Number(n).toLocaleString("en-IN", {maximumFractionDigits:2, minimumFractionDigits:2}); }
+function price(n){ return "₹" + Number(n).toLocaleString("en-IN", {maximumFractionDigits: n<1000?2:0}); }
+function me(){ return db.session ? db.users[db.session] : null; }
+function lockedOf(u){ return Math.max(0, Number(u && u.lockedAmount) || 0); }
+function depositHoldOf(u){ return Math.max(0, Number(u && u.depositHoldAmount) || 0); }
+// जमा की मूल राशि depositHoldAmount में सुरक्षित रहती है। ट्रेडिंग में यह राशि इस्तेमाल हो सकती है,
+// लेकिन निकासी योग्य बैलेंस में केवल deposit hold और सामान्य admin lock से ऊपर की रकम आती है।
+function withdrawableOf(u){ return Math.max(0, Number(u && u.balance || 0) - lockedOf(u) - depositHoldOf(u)); }
+function availableOf(u){ return Math.max(0, Number(u && u.balance || 0) - lockedOf(u)); }
+function safeText(v){ return String(v==null?"":v).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];}); }
+function masked(v){ v=String(v||""); return v.length>4 ? "••••"+v.slice(-4) : (v?"••••":"सेट नहीं है"); }
+
+/* ---- simulated market ---- */
+var ASSETS = [
+  {id:"btc", sym:"BTC", name:"बिटकॉइन", base:7800000, vol:.0042},
+  {id:"eth", sym:"ETH", name:"एथेरियम", base:280000, vol:.0048},
+  {id:"gold", sym:"GLD", name:"सोना (10 ग्राम)", base:125000, vol:.0016},
+  {id:"nifty", sym:"N50", name:"निफ्टी 50", base:26000, vol:.0013},
+  {id:"crude", sym:"OIL", name:"क्रूड ऑयल", base:5600, vol:.0026},
+  {id:"usd", sym:"USD", name:"डॉलर / रुपया", base:88.5, vol:.0009}
+];
+function gauss(){ return (Math.random()+Math.random()+Math.random()+Math.random()-2) * 1.7; }
+ASSETS.forEach(function(a){ a.open = a.base*(1+gauss()*.004); a.p = a.open; a.hist = [a.p]; for (var i=0;i<59;i++){ a.p *= 1+gauss()*a.vol; a.hist.push(a.p);} });
+function byId(id){ return ASSETS.filter(function(a){return a.id===id;})[0]; }
+function step(a){ a.p *= 1+gauss()*a.vol; a.hist.push(a.p); if (a.hist.length>60) a.hist.shift(); }
+
+/* ---- referral commission demo helpers ---- */
+function referralLevels(u){
+  var levels = [[], [], []];
+  Object.keys(db.users).forEach(function(k){
+    if (db.users[k].ref === u.code) levels[0].push(db.users[k]);
+  });
+  [1,2].forEach(function(i){
+    var parentCodes = levels[i-1].map(function(x){ return x.code; });
+    Object.keys(db.users).forEach(function(k){
+      if (parentCodes.indexOf(db.users[k].ref) !== -1) levels[i].push(db.users[k]);
+    });
+  });
+  return levels;
+}
+function referralCommission(u){
+  var levels = referralLevels(u), total = 0;
+  levels.forEach(function(group, i){
+    group.forEach(function(member){
+      (member.requests || []).forEach(function(r){
+        if (r.type === "withdraw" && String(r.status || "").indexOf("स्वीकृत") === 0){
+          total += Number(r.amount || 0) * COMMISSION_RATES[i] / 100;
+        }
+      });
+    });
+  });
+  return Math.round(total * 100) / 100;
+}
+function rateBadges(){
+  return '<div class="chips">' + COMMISSION_RATES.map(function(rate, i){
+    return '<span class="chip">Level ' + (i+1) + ' · ' + rate + '%</span>';
+  }).join('') + '</div>';
+}
+
+/* ---- state ---- */
+var route = "home", authMode = "login", sheet = null, adminUnlocked = false, adminTxPhone = null;
+var ADMIN_PIN = "246810";
+var $app = document.getElementById("app");
+
+function el(html){ var d = document.createElement("div"); d.innerHTML = html; return d.firstElementChild; }
+
+function render(){
+  var u = me();
+  if (!u){ $app.innerHTML = header() + authView(); return; }
+  var body = route==="refer" ? referView(u) : route==="profile" ? profileView(u) : route==="transfer" ? transferView(u) : route==="admin" ? adminView() : route==="deposit"?depositPage(u):homeView(u);
+
+  $app.innerHTML = header() + '<main>' + body + '</main>' + (route==="admin"?adminNavigation():tabs());
+  if (sheet) drawSheet(); else paintLive();
+}
+function header(){
+  return '<div class="top"><div class="top-in"><span class="brand">Grow <b>India</b></span>' +
+    '<span class="chip" style="background:var(--surface2);color:var(--accent)">● सक्रिय</span></div>' +
+    '<div class="demo-note"><div class="preview-status"><i></i> लाइव सर्वर · डेटाबेस से जुड़ा हुआ</div></div></div>';
+}
+function tabs(){
+  var t = [
+    ["home","होम",'<svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8M5 10v10h14V10"/></svg>'],
+    ["refer","रेफ़रल",'<svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6M17 5v6M14 8h6"/></svg>'],
+    ["transfer","ट्रांसफर",'<svg viewBox="0 0 24 24"><path d="M4 7h15l-3-3M20 17H5l3 3"/></svg>'],
+    ["profile","प्रोफ़ाइल",'<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>']
+  ];
+  return '<nav class="tabs" aria-label="मुख्य मेनू"><div class="tabs-in">' + t.map(function(x){
+    return '<button data-act="tab" data-v="'+x[0]+'"'+(route===x[0]?' aria-current="page"':'')+'>'+x[2]+x[1]+'</button>';
+  }).join("") + '</div></nav>';
+}
+
+/* ---- auth ---- */
+function authView(){
+  var reg = authMode==="register";
+  return '<section class="auth"><div><h1>'+(reg?'नया खाता बनाएँ':'वापस आए, स्वागत है')+'</h1>' +
+    '<p class="lead">Grow India में आपका स्वागत है। यह क्लाइंट प्रीव्यू है; लाइव ट्रेडिंग और वॉलेट सेवाएँ इंटीग्रेशन के बाद सक्रिय होंगी।</p></div>' +
+    '<div class="seg" role="tablist"><button role="tab" data-act="mode" data-v="login" aria-selected="'+!reg+'">लॉगिन</button>' +
+    '<button role="tab" data-act="mode" data-v="register" aria-selected="'+reg+'">रजिस्टर</button></div>' +
+    '<form class="form" id="authForm" novalidate>' +
+    '<label class="f" for="phone">मोबाइल नंबर<input id="phone" inputmode="numeric" autocomplete="tel-national" maxlength="10" placeholder="10 अंकों का नंबर"></label>' +
+    '<label class="f" for="pass">पासवर्ड<input id="pass" type="password" autocomplete="'+(reg?'new-password':'current-password')+'" placeholder="कम से कम 6 अक्षर"></label>' +
+    (reg?'<label class="f" for="rcode">रेफ़र कोड <span class="hint">(अगर है तो)</span><input id="rcode" autocapitalize="characters" maxlength="10" placeholder="जैसे GI4K9Q2"></label>':'') +
+    '<p class="err" id="authErr" role="alert"></p>' +
+    '<button class="btn" type="submit">'+(reg?'खाता बनाएँ':'लॉगिन करें')+'</button></form>' +
+    '<p class="note">क्लाइंट प्रीव्यू अकाउंट डेटा इसी ब्राउज़र में सेव होता है; प्रोडक्शन के लिए सुरक्षित सर्वर लॉगिन आवश्यक है।</p></section>';
+}
+function newCode(){
+  var c = "0123456789ABCDEFGHJKLMNPQRSTUVWXYZ", s;
+  do { s = "GI"; for (var i=0;i<5;i++) s += c[Math.floor(Math.random()*c.length)]; } while (codeOwner(s));
+  return s;
+}
+function codeOwner(code){ for (var k in db.users) if (db.users[k].code===code) return db.users[k]; return null; }
+function submitAuth(){
+  var phone = document.getElementById("phone").value.replace(/\D/g,""), pass = document.getElementById("pass").value;
+  var err = document.getElementById("authErr");
+  if (!/^[6-9]\d{9}$/.test(phone)) { err.textContent = "सही 10 अंकों का मोबाइल नंबर डालें।"; return; }
+  if (pass.length < 6) { err.textContent = "पासवर्ड कम से कम 6 अक्षर का होना चाहिए।"; return; }
+  if (authMode==="login"){
+    var u = db.users[phone];
+    if (!u || u.pw !== hash(pass)) { err.textContent = "नंबर या पासवर्ड ग़लत है।"; return; }
+    db.session = phone; save(); route = "home"; settleExpired(); render(); return;
+  }
+  if (db.users[phone]) { err.textContent = "यह नंबर पहले से रजिस्टर है। लॉगिन करें।"; return; }
+  var rc = (document.getElementById("rcode").value || "").trim().toUpperCase(), ref = "";
+  if (rc && db.settings.referralEnabled===false){ err.textContent = "रेफ़रल सुविधा फिलहाल बंद है।"; return; }
+  if (rc){ if (!codeOwner(rc)) { err.textContent = "यह रेफ़र कोड नहीं मिला। सही कोड डालें या खाली छोड़ दें।"; return; } ref = rc; }
+  db.users[phone] = { phone: phone, pw: hash(pass), code: newCode(), ref: ref, balance: START_BALANCE, points: 0, trades: [], requests: [], active: null, joined: Date.now() };
+  var up = ref, lvl = 0;
+  while (up && lvl < 3){ var o = codeOwner(up); if (!o) break; o.points += POINTS[lvl]; up = o.ref; lvl++; }
+  db.session = phone; save(); route = "home"; render();
+}
+
+/* ---- home ---- */
+function homeView(u){
+  if (!u.requests) u.requests = [];
+  var s = '<div class="card bal"><small>वॉलेट बैलेंस (Preview)</small><div class="amt num" id="balAmt">'+inr(u.balance)+'</div><small>प्रस्तुति हेतु दिखाया गया बैलेंस · वास्तविक फंड नहीं।</small></div>' +
+    '<div class="card"><h2>वॉलेट</h2><div class="row"><div class="l">जमा की मूल राशि (निकासी लॉक)</div><strong class="num">'+inr(depositHoldOf(u))+'</strong></div><div class="row"><div class="l">निकासी योग्य प्रॉफिट / रिलीज़ बैलेंस</div><strong class="num">'+inr(withdrawableOf(u))+'</strong></div><p class="note" style="margin-top:0">जमा की मूल राशि से ट्रेड किया जा सकता है, लेकिन उसे सीधे निकाला नहीं जा सकता। ट्रेडिंग से मिला निकासी योग्य प्रॉफिट निकाला जा सकता है। मूल जमा राशि की निकासी केवल एडमिन रिलीज़ के बाद होगी। यह केवल लोकल प्रीव्यू है; वास्तविक भुगतान कनेक्शन नहीं है।</p>' +
+    '<div class="wallet-actions"><button data-act="wallet" data-v="deposit">+ पैसे जमा करें</button><button class="secondary" data-act="wallet" data-v="withdraw">पैसे निकालें</button></div>' +
+    (u.requests.length ? '<div style="margin-top:14px"><h2>अनुरोध का इतिहास</h2><div class="list">'+u.requests.slice(0,5).map(function(r){ return '<div class="row"><div class="l">'+(r.type==='deposit'?'जमा अनुरोध':'निकासी अनुरोध')+'<span>'+r.date+'</span>'+(r.type==='deposit'?'<a class="btn sm" href="#deposit/'+r.id+'">Payment पेज खोलें</a>':'')+'</div><div style="text-align:right"><strong class="num">'+inr(r.amount)+'</strong><br><span class="request-status">'+r.status+'</span></div></div>'; }).join('')+'</div></div>' : '<p class="empty" style="margin-top:12px">अभी कोई अनुरोध नहीं है।</p>') + '</div>';
+  if(CONFIG.adTitle || CONFIG.adText || CONFIG.adImage){
+    s += '<div class="card"><h2>'+safeText(CONFIG.adTitle||'सूचना')+'</h2>'+(CONFIG.adImage?'<img src="'+safeText(CONFIG.adImage)+'" alt="बैनर" style="width:100%;max-height:220px;object-fit:cover;border-radius:12px;margin:4px 0">':'')+(CONFIG.adText?'<p>'+safeText(CONFIG.adText).replace(/\n/g,'<br>')+'</p>':'')+(CONFIG.adUrl?'<a class="btn" style="display:block;text-align:center;text-decoration:none" href="'+safeText(CONFIG.adUrl)+'" target="_blank" rel="noopener">और जानकारी</a>':'')+'</div>';
+  }
+  if (u.active){
+    var a = byId(u.active.aid);
+    s += '<button class="strip" data-act="open" data-v="'+a.id+'"><span>चल रही ट्रेड: '+a.name+'</span><span class="num" id="stripCd">'+secsLeft(u.active)+' सेकंड</span></button>';
+  }
+  s += '<div><h2>ट्रेडिंग एसेट्स</h2><div class="assets">' + ASSETS.map(function(a){
+    return '<button class="asset" data-act="open" data-v="'+a.id+'"><span class="badge">'+a.sym+'</span>' +
+      '<span><span class="nm">'+a.name+'</span><span class="sub" style="display:block">मार्केट डेटा · API कनेक्शन लंबित</span></span>' +
+      '<span class="pr"><span class="num" data-pr="'+a.id+'">'+price(a.p)+'</span><br><span class="pct num" data-pc="'+a.id+'"></span></span></button>';
+  }).join("") + '</div><p class="note">लाइव मार्केट डेटा प्रदाता API कनेक्ट होने के बाद दिखेगा। वर्तमान चार्ट केवल प्रीव्यू डेटा दर्शाता है।</p></div>';
+  s += '<div class="card"><h2>मेरी ट्रेड्स</h2>' + (u.trades.length ? '<div class="list">' + u.trades.slice(0,6).map(function(t){
+    return '<div class="row"><div class="l">'+t.name+'<span>ट्रेड प्रीव्यू · राशि '+inr(t.stake)+'</span></div>' +
+      '<div class="num '+(t.pnl>=0?'up':'down')+'" style="font-weight:700">'+(t.pnl>=0?'+':'−')+inr(Math.abs(t.pnl))+'</div></div>';
+  }).join("") + '</div>' : '<p class="empty">अभी कोई ट्रेड नहीं। ऊपर से कोई एसेट चुनकर शुरू करें।</p>') + '</div>';
+  return s;
+}
+
+/* ---- internal transfer: local preview only ---- */
+function transferView(u){
+  if(db.settings.transferEnabled===false) return '<div class="card"><h2>पैसा ट्रांसफर बंद है</h2><p class="note">एडमिन ने फिलहाल यूज़र-टू-यूज़र ट्रांसफर बंद किया है।</p></div>';
+  var history=(u.transfers||[]).slice(0,10).map(function(t){return '<div class="row"><div class="l"><strong>'+(t.direction==="sent"?'भेजा':'प्राप्त')+' · '+safeText(t.otherPhone)+'</strong><span>'+safeText(t.date||'')+'</span></div><strong class="num">'+inr(t.amount)+'</strong></div>';}).join('');
+  return '<div class="card"><h2>दूसरी User ID पर पैसा भेजें</h2><p class="note">यह केवल लोकल प्रीव्यू ट्रांसफर है। लॉक जमा मूल राशि नहीं भेजी जा सकती; केवल निकासी योग्य प्रॉफिट/रिलीज़ बैलेंस से ट्रांसफर होगा। कोई वास्तविक बैंक भुगतान नहीं होता।</p><div class="row"><div class="l">ट्रांसफर योग्य बैलेंस</div><strong class="num">'+inr(withdrawableOf(u))+'</strong></div><form id="transferForm" class="form"><label class="f">जिस मोबाइल नंबर / User ID पर भेजना है<input name="toPhone" inputmode="numeric" maxlength="10" required placeholder="10 अंकों का नंबर"></label><label class="f">राशि (₹)<input name="amount" type="number" min="1" step="1" required placeholder="राशि दर्ज करें"></label><button class="btn" type="submit">प्रीव्यू ट्रांसफर करें</button><p id="transferErr" class="err" role="alert"></p></form></div><div class="card"><h2>ट्रांसफर हिस्ट्री</h2>'+(history||'<p class="empty">अभी कोई ट्रांसफर नहीं है।</p>')+'</div>';
+}
+
+/* ---- refer ---- */
+function referView(u){
+  if(db.settings.referralEnabled===false) return '<div class="card"><h2>रेफ़रल सुविधा बंद है</h2><p class="note">एडमिन ने फिलहाल रेफ़रल रजिस्ट्रेशन/पेज बंद किया है।</p></div>';
+  var levels = referralLevels(u);
+  var totalCommission = referralCommission(u);
+
+  return '<div class="card"><h2>आपका रेफ़र कोड</h2>' +
+    '<div class="code"><strong>'+u.code+'</strong><button class="btn sm" data-act="copy" data-v="'+u.code+'" id="copyBtn">कॉपी</button></div>' +
+    '<p class="note">जब कोई व्यक्ति इस रेफ़रल कोड से रजिस्टर करता है, तो आपको रेफ़रल पर मिलने वाली राशि रुपये में दिखाई जाएगी।</p></div>' +
+
+    '<div class="card"><h2>3 लेवल की रेफ़रल राशि</h2><div class="levels">' +
+    [0,1,2].map(function(i){
+      return '<div class="lvl"><span class="lb">'+(i+1)+'</span><span>'+['सीधे जुड़े (लेवल 1)','लेवल 2','लेवल 3'][i] +
+        '<br><span class="hint">'+levels[i].length+' सदस्य</span></span><span class="pt num">'+POINTS[i]+'</span></div>';
+    }).join("") + '</div></div>' +
+
+    '<div class="card"><div style="display:flex;justify-content:space-between;gap:10px;align-items:center">' +
+    '<strong>Referral commission (Preview)</strong><strong class="num" style="font-size:30px;color:var(--saffron)">' +
+    inr(totalCommission) + '</strong></div>' + rateBadges() +
+    '<p class="note">यह रेफ़रल कमीशन केवल प्रीव्यू गणना है। वास्तविक भुगतान के लिए सर्वर-साइड लेजर और भुगतान प्रदाता आवश्यक हैं।</p></div>' +
+
+    '<div class="card"><small class="hint">आपकी कुल रेफ़रल राशि</small>' +
+    '<div class="num" style="font-family:var(--font-display);font-size:34px;font-weight:700;color:var(--saffron)">'+inr(u.points)+'</div></div>';
+}
+
+/* ---- profile ---- */
+function profileView(u){
+  var wins = u.trades.filter(function(t){return t.pnl>0;}).length;
+  var rate = u.trades.length ? Math.round(wins*100/u.trades.length)+"%" : "—";
+  var sup = CONFIG.support ? '<a class="link" href="tel:'+safeText(CONFIG.support)+'">'+safeText(CONFIG.support)+'</a>' : '<span class="hint">अभी जोड़ा नहीं गया</span>';
+  var ch = CONFIG.channel ? '<a class="link" href="'+safeText(CONFIG.channel)+'" target="_blank" rel="noopener">'+safeText(CONFIG.channelTitle||'ऑफिशियल चैनल')+'</a>' : '<span class="hint">अभी जोड़ा नहीं गया</span>'; 
+  return '<div class="card kv">' +
+    '<div class="row"><div class="l">मोबाइल नंबर</div><div class="num" style="font-weight:600">+91 '+u.phone+'</div></div>' +
+    '<div class="row"><div class="l">रेफ़र कोड</div><div style="font-weight:700;letter-spacing:.06em">'+u.code+'</div></div>' +
+    '<div class="row"><div class="l">वॉलेट बैलेंस (Preview)</div><div class="num" style="font-weight:600">'+inr(u.balance)+'</div></div>' +
+    '<div class="row"><div class="l">जमा की मूल राशि (ट्रेड कर सकते हैं, निकासी लॉक)</div><div class="num" style="font-weight:600">'+inr(depositHoldOf(u))+'</div></div>' +
+    '<div class="row"><div class="l">निकासी योग्य ट्रेडिंग प्रॉफिट / रिलीज़ बैलेंस</div><div class="num" style="font-weight:600">'+inr(withdrawableOf(u))+'</div></div>' +
+    '<div class="row"><div class="l">कुल ट्रेड / जीत का हिस्सा</div><div class="num" style="font-weight:600">'+u.trades.length+' / '+rate+'</div></div></div>' +
+    '<div class="card"><h2>Bank Details</h2>' +
+    (u.bank ? '<div class="bank-summary"><strong>'+safeText(u.bank.name)+'</strong><span>'+safeText(u.bank.bankName)+'</span><span>Account: '+masked(u.bank.account)+'</span><span>IFSC: '+safeText(u.bank.ifsc)+'</span><span>UPI: '+safeText(u.bank.upi||'—')+'</span></div>' : '<p class="empty">अभी बैंक विवरण सेव नहीं हैं।</p>') +
+    '<div class="security-actions"><button class="btn" data-act="bank-save">'+(u.bank?'बैंक विवरण बदलें':'बैंक विवरण जोड़ें')+'</button>' +
+    '<button class="btn ghost" data-act="pin-set">'+(u.securityPin?'PIN बदलें':'पहले PIN सेट करें')+'</button>' +
+    '<button class="btn ghost" data-act="password-change">पासवर्ड बदलें</button></div>' +
+    '<p class="note">बैंक विवरण सेव करने से पहले 4–6 अंकों का PIN आवश्यक है। यह ब्राउज़र-आधारित प्रीव्यू स्टोरेज है; वास्तविक सुरक्षा के लिए सर्वर-साइड सुरक्षा जरूरी है।</p></div>' +
+    '<div class="card kv"><h2>मदद और सपोर्ट</h2>' +
+    '<div class="row"><div class="l">हेल्प सपोर्ट नंबर</div><div style="text-align:right">'+sup+'</div></div>' +
+    '<div class="row"><div class="l">ऑफ़िशियल चैनल</div><div style="text-align:right;min-width:0">'+ch+'</div></div>' + (CONFIG.depositUrl?'<div class="row"><div class="l">'+safeText(CONFIG.depositTitle)+'</div><a class="link" href="'+safeText(CONFIG.depositUrl)+'" target="_blank" rel="noopener">खोलें</a></div>':'') + (CONFIG.withdrawUrl?'<div class="row"><div class="l">'+safeText(CONFIG.withdrawTitle)+'</div><a class="link" href="'+safeText(CONFIG.withdrawUrl)+'" target="_blank" rel="noopener">खोलें</a></div>':'') + '</div>' +
+    '<button class="btn ghost" data-act="admin-login">Admin Panel खोलें</button>' +
+    '<button class="btn ghost" data-act="logout">लॉगआउट</button>' +
+    '<p class="note">क्लाइंट प्रीव्यू: लाइव ट्रेड निष्पादन, सुरक्षित सर्वर, KYC और पेमेंट प्रदाता कनेक्शन अभी कॉन्फ़िगर किए जाने हैं।</p>';
+}
+
+/* ---- admin transaction history: derived from locally stored preview records ---- */
+function userTransactionRows(u){
+  var rows=[];
+  (u.requests||[]).forEach(function(r){rows.push({time:r.createdAt||0,date:r.date||'',type:r.type==='deposit'?'DEPOSIT':'WITHDRAWAL',amount:Number(r.amount||0),status:r.status||'लंबित',detail:r.type==='withdraw'&&r.bank?('बैंक: '+(r.bank.bankName||'')+' · खाता: '+(r.bank.account||'')):'Deposit request'});});
+  (u.trades||[]).forEach(function(t){rows.push({time:t.at||0,date:t.at?new Date(t.at).toLocaleString('hi-IN'):'',type:'TRADE',amount:Number(t.stake||0),status:'पूर्ण',detail:(t.name||'Asset')+' · '+(t.dir||'')+' · P/L '+inr(t.pnl||0)});});
+  (u.transfers||[]).forEach(function(t){rows.push({time:t.createdAt||0,date:t.date||'',type:t.direction==='sent'?'TRANSFER SENT':'TRANSFER RECEIVED',amount:Number(t.amount||0),status:'पूर्ण (Preview)',detail:(t.direction==='sent'?'भेजा गया: ':'प्राप्त हुआ: ')+(t.otherPhone||'')});});
+  return rows.sort(function(a,b){return b.time-a.time;});
+}
+function adminUserTransactionView(phone){
+  var u=db.users[phone]; if(!u)return '';
+  var rows=userTransactionRows(u), dep=0, wd=0, sent=0, received=0, profit=0;
+  (u.requests||[]).forEach(function(r){if(String(r.status||'').indexOf('स्वीकृत')===0){if(r.type==='deposit')dep+=Number(r.amount||0);if(r.type==='withdraw')wd+=Number(r.amount||0);}});
+  (u.transfers||[]).forEach(function(t){if(t.direction==='sent')sent+=Number(t.amount||0);else received+=Number(t.amount||0);});
+  (u.trades||[]).forEach(function(t){profit+=Number(t.pnl||0);});
+  var out='<div class="card" id="adminTxDetail"><div class="sh-h"><div><h2>Transaction Details</h2><span class="hint">यूज़र: +91 '+safeText(u.phone)+'</span></div><button class="btn sm ghost" data-act="close-user-transactions">बंद करें</button></div>'+
+  '<div class="admin-stat"><div class="card"><span class="hint">Approved Deposit</span><br><strong>'+inr(dep)+'</strong></div><div class="card"><span class="hint">Approved Withdrawal</span><br><strong>'+inr(wd)+'</strong></div><div class="card"><span class="hint">Transfer Sent</span><br><strong>'+inr(sent)+'</strong></div><div class="card"><span class="hint">Transfer Received</span><br><strong>'+inr(received)+'</strong></div><div class="card"><span class="hint">Trade P/L (recorded)</span><br><strong>'+inr(profit)+'</strong></div><div class="card"><span class="hint">कुल रिकॉर्ड</span><br><strong>'+rows.length+'</strong></div></div>'+
+  '<p class="note">सभी उपलब्ध लोकल रिकॉर्ड तारीख के अनुसार। पुराने रिकॉर्ड जो पहले सेव नहीं हुए थे, वे यहाँ नहीं दिखेंगे।</p><button class="btn sm" data-act="export-user-transactions" data-user="'+safeText(u.phone)+'">इस यूज़र की Transaction CSV डाउनलोड करें</button>';
+  if(!rows.length)out+='<p class="empty">इस यूज़र का कोई transaction record नहीं मिला।</p>';
+  rows.forEach(function(r){out+='<div class="row"><div class="l"><strong>'+safeText(r.type)+'</strong><span>'+safeText(r.date)+'</span><span>'+safeText(r.detail)+'</span><span>स्थिति: '+safeText(r.status)+'</span></div><strong class="num">'+inr(r.amount)+'</strong></div>';});
+  return out+'</div>';
+}
+/* ---- admin panel: local challenge simulation only ---- */
+function originalAdminView(){
+  if(!adminUnlocked) return '<div class="card"><h2>Admin Panel</h2><p class="empty">Admin PIN से लॉगिन करें।</p><p class="note">इस HTML प्रीव्यू का डिफ़ॉल्ट Admin PIN: <strong>246810</strong></p><button class="btn" data-act="admin-login">Admin Login</button></div>';
+  var users=Object.keys(db.users).map(function(k){return db.users[k];}), requests=[];
+  users.forEach(function(u){(u.requests||[]).forEach(function(r){requests.push({user:u,request:r});});});
+  requests.sort(function(a,b){return (b.request.createdAt||0)-(a.request.createdAt||0);});
+  var pending=requests.filter(function(x){return x.request.status==="लंबित";}).length;
+  var totalCommission=users.reduce(function(sum,user){return sum+referralCommission(user);},0);
+  var totalDeposits=0,totalWithdrawals=0; users.forEach(function(usr){(usr.requests||[]).forEach(function(r){if(String(r.status||'').indexOf('स्वीकृत')===0){if(r.type==='deposit')totalDeposits+=Number(r.amount||0);if(r.type==='withdraw')totalWithdrawals+=Number(r.amount||0);}});});
+
+  var html='<div class="sh-h"><div><h2>Admin Dashboard</h2><span class="hint">स्थानीय प्रीव्यू डेटा · सर्वर कनेक्शन लंबित</span></div><button class="btn sm ghost" data-act="admin-logout">लॉक</button></div>'+
+    '<div class="admin-stat"><div class="card"><span class="hint">कुल यूज़र</span><br><strong>'+users.length+'</strong></div><div class="card"><span class="hint">लंबित अनुरोध</span><br><strong>'+pending+'</strong></div></div>'+
+    '<div class="admin-stat"><div class="card"><span class="hint">कुल रेफ़रल राशि</span><br><strong>'+inr(totalCommission)+'</strong></div></div>'+
+    '<div class="admin-stat"><div class="card"><span class="hint">कुल Approved Deposit</span><br><strong>'+inr(totalDeposits)+'</strong></div><div class="card"><span class="hint">कुल Approved Withdrawal</span><br><strong>'+inr(totalWithdrawals)+'</strong></div></div>'+
+    '<div class="card"><h2>फीचर कंट्रोल</h2><div class="row"><div class="l"><strong>यूज़र ट्रांसफर</strong><span>मोबाइल नंबर से दूसरे यूज़र को प्रीव्यू बैलेंस भेजना</span></div><button class="btn sm" data-act="toggle-transfer">'+(db.settings.transferEnabled===false?'बंद है · चालू करें':'चालू है · बंद करें')+'</button></div><div class="row"><div class="l"><strong>Referral सुविधा</strong><span>रेफ़रल पेज और नए रेफ़रल कोड का उपयोग</span></div><button class="btn sm" data-act="toggle-referral">'+(db.settings.referralEnabled===false?'बंद है · चालू करें':'चालू है · बंद करें')+'</button></div></div>'+
+    '<div class="card"><h2>Deposit / Withdrawal Requests</h2><button class="btn sm" data-act="export-requests">पूरी Withdrawal / Deposit लिस्ट डाउनलोड करें (CSV)</button><p class="note">एडमिन रिकॉर्ड में पूरा बैंक खाता नंबर दिखेगा। CSV फ़ाइल में भी सभी अनुरोधों का विवरण रहेगा।</p>'; 
+
+  if(!requests.length) html+='<p class="empty">अभी कोई अनुरोध नहीं है।</p>';
+  requests.forEach(function(x){
+    var r=x.request,u=x.user,isPending=r.status==="लंबित";
+    html+='<div class="row"><div class="l"><strong>'+(r.type==="deposit"?"Deposit Request":"Withdrawal Request")+'</strong><span>यूज़र: '+u.phone+' · '+(r.date||'')+'</span><span>स्थिति: '+r.status+'</span>'+(r.type==="withdraw"&&r.bank?'<span>खाताधारक: '+safeText(r.bank.name)+'</span><span>बैंक: '+safeText(r.bank.bankName)+' · IFSC: '+safeText(r.bank.ifsc)+'</span><span>खाता: '+safeText(r.bank.account)+' · UPI: '+safeText(r.bank.upi||"—")+'</span>':'')+'</div><div style="text-align:right"><strong class="num">'+inr(r.amount)+'</strong>';
+    if(isPending && r.type==="deposit" && !r.paymentInfoSent) html+='<form class="admin-payment-form form" data-user="'+u.phone+'" data-request="'+r.id+'" style="margin-top:10px"><label class="f">Payment QR / फोटो अपलोड करें<input type="file" name="paymentPhoto" accept="image/*" required></label><label class="f">UPI ID<input name="paymentUpi" required placeholder="name@upi"></label><button class="btn sm" type="submit">यूज़र को भेजें</button><p class="note">भेजने पर यूज़र का 10 मिनट का टाइमर बंद होगा और QR/UPI दिखेगा।</p></form>';
+    if(isPending) html+='<div class="admin-actions"><button data-act="request-approve" data-user="'+u.phone+'" data-request="'+r.id+'">Approve</button><button class="reject" data-act="request-reject" data-user="'+u.phone+'" data-request="'+r.id+'">Reject</button></div>';
+    if(r.type==="deposit" && r.paymentInfoSent) html+='<div class="note">भुगतान जानकारी भेजी गई: '+safeText(r.paymentUpi||'')+'</div>';
+    html+='</div></div>';
+  });
+  html+='</div><div class="card"><h2>ऐप कंटेंट और लिंक सेटिंग</h2><p class="note">यहाँ सपोर्ट, लिंक और होम पेज बैनर का टाइटल/टेक्स्ट/फोटो सेट करें। केवल भरोसेमंद और सही लिंक डालें।</p><form id="settingsForm" class="form">'+
+    '<label class="f">हेल्प सपोर्ट नंबर<input name="support" value="'+safeText(CONFIG.support)+'" placeholder="जैसे 9876543210"></label>'+
+    '<label class="f">ऑफिशियल चैनल का टाइटल<input name="channelTitle" value="'+safeText(CONFIG.channelTitle)+'"></label><label class="f">ऑफिशियल चैनल लिंक<input name="channel" type="url" value="'+safeText(CONFIG.channel)+'" placeholder="https://..."></label>'+
+    '<label class="f">Deposit लिंक का टाइटल<input name="depositTitle" value="'+safeText(CONFIG.depositTitle)+'"></label><label class="f">Deposit लिंक URL<input name="depositUrl" type="url" value="'+safeText(CONFIG.depositUrl)+'" placeholder="https://..."></label>'+
+    '<label class="f">Withdrawal लिंक का टाइटल<input name="withdrawTitle" value="'+safeText(CONFIG.withdrawTitle)+'"></label><label class="f">Withdrawal लिंक URL<input name="withdrawUrl" type="url" value="'+safeText(CONFIG.withdrawUrl)+'" placeholder="https://..."></label>'+
+    '<h2>Home Page Advertisement / Banner</h2><label class="f">Ad का टाइटल<input name="adTitle" value="'+safeText(CONFIG.adTitle)+'" placeholder="जैसे आज का ऑफर"></label><label class="f">Ad में लिखने वाला टेक्स्ट<textarea name="adText" rows="3" style="width:100%;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--surface)">'+safeText(CONFIG.adText)+'</textarea></label><label class="f">फोटो अपलोड करें<input name="adPhoto" type="file" accept="image/*"><span class="hint">या नीचे फोटो URL डालें</span></label><label class="f">फोटो URL<input name="adImage" type="url" value="'+safeText(CONFIG.adImage)+'" placeholder="https://.../photo.jpg"></label><label class="f">Ad पर क्लिक करने का लिंक (वैकल्पिक)<input name="adUrl" type="url" value="'+safeText(CONFIG.adUrl)+'" placeholder="https://..."></label><button class="btn" type="submit">सेटिंग सेव करें</button></form></div>';
+  html+='</div><div class="card"><h2>यूज़र अकाउंट्स</h2><label class="f">मोबाइल नंबर / User ID से खोजें<input id="adminUserSearch" inputmode="numeric" placeholder="यूज़र का 10 अंकों का नंबर लिखें"></label><p class="note">यूज़र मिलने पर उसी कार्ड से बैंक विवरण, पासवर्ड रीसेट और अन्य अकाउंट कार्रवाई करें। PIN यूज़र का निजी सुरक्षा PIN है; उसे एडमिन भी देख नहीं सकता।</p>';
+  users.forEach(function(u){
+    html+='<div class="row admin-user-card" data-phone="'+u.phone+'"><div class="l"><strong>+91 '+u.phone+'</strong><span>रेफ़र कोड: '+u.code+'</span><span>बैंक: '+(u.bank?safeText(u.bank.bankName)+' · '+masked(u.bank.account):'सेट नहीं है')+'</span><span>Locked: '+inr(lockedOf(u))+' · ट्रेड के लिए उपलब्ध: '+inr(availableOf(u))+'</span></div><div style="text-align:right"><strong class="num">'+inr(u.balance)+'</strong><div class="admin-actions"><button data-act="view-user-transactions" data-user="'+u.phone+'">Transactions देखें</button><button data-act="admin-adjust" data-user="'+u.phone+'">बैलेंस बदलें</button><button data-act="admin-lock" data-user="'+u.phone+'">Amount Lock</button><button data-act="admin-release" data-user="'+u.phone+'">Trade Lock Release</button><button data-act="admin-deposit-release" data-user="'+u.phone+'">जमा मूल राशि Release करें</button><button data-act="admin-bank" data-user="'+u.phone+'">बैंक बदलें</button><button data-act="admin-pin-reset" data-user="'+u.phone+'">PIN रीसेट</button><button class="reject" data-act="admin-password" data-user="'+u.phone+'">पासवर्ड रीसेट</button></div></div></div>';
+  });
+  html+='</div>'+(adminTxPhone?adminUserTransactionView(adminTxPhone):'')+'<div class="card"><h2>Referral Details</h2><div class="chips"><span class="chip">Level 1 · 5%</span><span class="chip">Level 2 · 3%</span><span class="chip">Level 3 · 2%</span></div>';
+  users.forEach(function(u){
+    var levels=referralLevels(u), commission=referralCommission(u);
+    html+='<div class="row" style="align-items:flex-start"><div class="l"><strong>+91 '+u.phone+'</strong><span>कोड: '+u.code+' · रेफ़र किया</span><span>Level 1: '+levels[0].length+' · Level 2: '+levels[1].length+' · Level 3: '+levels[2].length+'</span></div><div style="text-align:right"><strong class="num">'+inr(commission)+'</strong><span class="hint" style="display:block">commission</span></div></div>';
+  });
+  if(!users.length) html+='<p class="empty">अभी कोई referral record नहीं है।</p>';
+  html+='</div><p class="note">Referral commission की गणना दर्ज किए गए स्वीकृत निकासी अनुरोधों के आधार पर दिखाई जाती है। वास्तविक भुगतान के लिए सर्वर-साइड सत्यापन और भुगतान व्यवस्था आवश्यक है।</p>';
+  return html;
+}
+function findRequest(phone,id){
+  var u=db.users[phone];if(!u||!u.requests)return null;
+  for(var i=0;i<u.requests.length;i++)if(String(u.requests[i].id)===String(id))return {user:u,request:u.requests[i]};
+  return null;
+}
+
+/* ---- trading ---- */
+function secsLeft(t){ return Math.max(0, Math.ceil((t.end - Date.now())/1000)); }
+function settle(u, exit){
+  var t = u.active, a = byId(t.aid);
+  var pnl = Math.round(t.stake*Number(t.signalPct||0))/100;
+  u.balance = Math.round((u.balance + t.stake + pnl)*100)/100;
+  var rec = { name:a.name, dir:t.dir, stake:t.stake, entry:t.entry, exit:exit, pnl:pnl, at:Date.now() };
+  u.trades.unshift(rec); if (u.trades.length>30) u.trades.pop();
+  u.active = null; save(); return rec;
+}
+function settleExpired(){
+  var u = me(); if (!u || !u.active || Date.now() < u.active.end) return;
+  var a = byId(u.active.aid), p = u.active.entry;
+  for (var i=0;i<TRADE_SECONDS;i++) p *= 1+gauss()*a.vol;
+  settle(u, p);
+}
+function drawSheet(){
+  var a = byId(sheet.aid), u = me(), act = u.active, mine = act && act.aid===a.id, other = act && !mine;
+  var inner = '<p class="note">एडमिन-नियंत्रित ट्रेड सिमुलेशन; वास्तविक बाजार रिटर्न नहीं।</p><div class="sh-h"><div><h3>'+a.name+'</h3><div class="live num" id="shPrice">'+price(a.p)+'</div></div><button class="x" data-act="close" aria-label="बंद करें">×</button></div>' +
+    '<div class="chip" style="display:inline-block">ट्रेड प्रीव्यू · लाइव मार्केट API कनेक्शन लंबित</div>' +
+    '<svg class="spark" id="shSpark" viewBox="0 0 320 96" preserveAspectRatio="none" aria-hidden="true"></svg>';
+  if (sheet.result){
+    var r = sheet.result, win = r.pnl>=0;
+    inner += '<div class="res"><div class="hint">ट्रेड पूरी हुई</div><div class="big num '+(win?'up':'down')+'">'+(win?'+':'−')+inr(Math.abs(r.pnl))+'</div>' +
+      '<p class="note">यह प्रीव्यू परिणाम है। वास्तविक ऑर्डर निष्पादन के लिए अधिकृत ट्रेडिंग API आवश्यक है।</p></div>' +
+      '<button class="btn ghost" data-act="close">ठीक है</button>';
+  } else if (mine){
+    inner += '<div class="cd num" id="shCd">'+secsLeft(act)+'</div><div class="hint" style="text-align:center">सेकंड बाकी</div>' +
+      '<div class="bar"><i id="shBar"></i></div>' +
+      '<div class="row"><div class="l">ट्रेड प्रीव्यू · राशि '+inr(act.stake)+'<span>लाइव निष्पादन उपलब्ध नहीं</span></div><div class="num up" style="font-weight:700">+'+inr(act.stake*Number(act.signalPct||0)/100)+'</div></div>';
+  } else if (u.lastDay===today()){
+    inner += '<p class="empty">आज का प्रीव्यू ट्रेड पूरा हो चुका है। अगला प्रीव्यू कल उपलब्ध होगा।</p>';
+  } else if (other){
+    inner += '<p class="empty">आपकी एक ट्रेड पहले से चल रही है। उसके पूरा होने के बाद नई ट्रेड शुरू करें।</p>';
+  } else {
+    inner += '<div class="hint">ट्रेड के लिए उपलब्ध राशि: '+inr(availableOf(u))+'</div><label class="f" for="stake">राशि (Preview ₹, कम से कम ₹1,000)<input id="stake" inputmode="numeric" value="'+(sheet.stake||1000)+'"></label>' +
+      '<div class="chips"><button data-act="max-stake">पूरी उपलब्ध राशि</button>'+[1000,2000,5000].map(function(v){return '<button data-act="chip" data-v="'+v+'">₹'+v+'</button>';}).join("")+'</div>' +
+      '<p class="err" id="shErr" role="alert"></p>' +
+      '<button class="btn" data-act="start">60 सेकंड की ट्रेड शुरू करें</button>' +
+      '<p class="note">यह केवल इंटरैक्टिव प्रीव्यू है; 60 सेकंड का परिणाम वास्तविक मार्केट ऑर्डर नहीं है। लाइव ट्रेडिंग के लिए अधिकृत API और सर्वर-साइड निष्पादन आवश्यक है।</p>';
+  }
+  var v = document.getElementById("veil");
+  if (!v){
+    v = el('<div class="veil" id="veil" role="dialog" aria-modal="true"><div class="sheet" id="sheetBox"></div></div>');
+    document.body.appendChild(v);
+    v.addEventListener("click", function(e){ if (e.target===v) closeSheet(); });
+  }
+  document.getElementById("sheetBox").innerHTML = inner;
+  paintLive();
+}
+function closeSheet(){ sheet = null; var v = document.getElementById("veil"); if (v) v.remove(); }
+function spark(a, entry){
+  var h = a.hist, mn = Math.min.apply(null,h), mx = Math.max.apply(null,h);
+  if (entry){ mn = Math.min(mn, entry); mx = Math.max(mx, entry); }
+  var rg = (mx-mn) || 1, pts = h.map(function(p,i){ return (i*320/Math.max(1,h.length-1)).toFixed(1)+","+(88-(p-mn)/rg*80).toFixed(1); }).join(" ");
+  var line = entry ? '<line x1="0" x2="320" y1="'+(88-(entry-mn)/rg*80).toFixed(1)+'" y2="'+(88-(entry-mn)/rg*80).toFixed(1)+'" stroke="var(--saffron)" stroke-width="1.5" stroke-dasharray="5 4"/>' : "";
+  return line + '<polyline points="'+pts+'" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>';
+}
+function paintLive(){
+  ASSETS.forEach(function(a){
+    var p = document.querySelector('[data-pr="'+a.id+'"]'), c = document.querySelector('[data-pc="'+a.id+'"]');
+    if (p) p.textContent = price(a.p);
+    if (c){ var d = (a.p/a.open-1)*100; c.textContent = (d>=0?"+":"−")+Math.abs(d).toFixed(2)+"%"; c.className = "pct num "+(d>=0?"up":"down"); }
+  });
+  var u = me(); if (!u) return;
+  var sc = document.getElementById("stripCd"); if (sc && u.active) sc.textContent = secsLeft(u.active)+" सेकंड";
+  if (!sheet) return;
+  var a = byId(sheet.aid), act = u.active && u.active.aid===a.id ? u.active : null;
+  var sp = document.getElementById("shPrice"); if (sp) sp.textContent = price(a.p);
+  var sk = document.getElementById("shSpark"); if (sk) sk.innerHTML = spark(a, act && act.entry);
+  if (act){
+    var left = secsLeft(act), cd = document.getElementById("shCd"); if (cd) cd.textContent = left;
+    var bar = document.getElementById("shBar"); if (bar) bar.style.width = ((TRADE_SECONDS-left)/TRADE_SECONDS*100)+"%";
+    var pn = document.getElementById("shPnl");
+    if (pn){ var x = (act.dir==="up"?1:-1)*(a.p-act.entry)/act.entry*act.stake; pn.textContent = (x>=0?"+":"−")+inr(Math.abs(x)); pn.className = "num "+(x>=0?"up":"down"); }
+  }
+}
+setInterval(function(){
+  ASSETS.forEach(step);
+  var u = me();
+  if (u && u.active && Date.now() >= u.active.end){
+    var a = byId(u.active.aid), rec = settle(u, a.p);
+    if (sheet && sheet.aid===a.id) sheet.result = rec;
+    if (sheet) drawSheet();
+    if (route==="home") render();
+    var b = document.getElementById("balAmt"); if (b) b.textContent = inr(u.balance);
+  }
+  paintLive();
+}, 1000);
+
+
+function openAccountForm(kind, targetPhone){
+  var u=me(), target=targetPhone?db.users[targetPhone]:u, isAdmin=!!targetPhone;
+  if(!target)return;
+  var title=kind==="bank"?(isAdmin?"यूज़र बैंक विवरण अपडेट करें":"बैंक विवरण"):kind==="pin"?"सुरक्षा PIN":"पासवर्ड बदलें";
+  var fields="";
+  if(kind==="bank"){
+    var bk=target.bank||{};
+    fields='<label class="f">खाताधारक का नाम<input name="name" required autocomplete="name" value="'+safeText(bk.name||"")+'" placeholder="पूरा नाम"></label>'+
+      '<label class="f">बैंक का नाम<input name="bankName" required value="'+safeText(bk.bankName||"")+'" placeholder="जैसे State Bank of India"></label>'+
+      '<label class="f">IFSC Code<input name="ifsc" required maxlength="11" autocapitalize="characters" value="'+safeText(bk.ifsc||"")+'" placeholder="SBIN0000000"></label>'+
+      '<label class="f">Bank Account Number<input name="account" required inputmode="numeric" value="'+safeText(bk.account||"")+'" placeholder="खाता नंबर"></label>'+
+      '<label class="f">Confirm Account Number<input name="confirm" required inputmode="numeric" placeholder="खाता नंबर दोबारा"></label>'+
+      '<label class="f">UPI ID <span class="hint">(वैकल्पिक)</span><input name="upi" value="'+safeText(bk.upi||"")+'" placeholder="name@bank"></label>'+
+      (isAdmin?'':'<label class="f">सुरक्षा PIN<input name="pin" type="password" inputmode="numeric" maxlength="6" required placeholder="अपना PIN दर्ज करें"></label>');
+  }else if(kind==="pin"){
+    fields=(target.securityPin?'<label class="f">मौजूदा PIN<input name="oldPin" type="password" inputmode="numeric" maxlength="6" required></label>':'')+
+      '<label class="f">नया PIN<input name="newPin" type="password" inputmode="numeric" maxlength="6" required placeholder="4 से 6 अंक"></label>'+
+      '<label class="f">PIN दोबारा दर्ज करें<input name="confirmPin" type="password" inputmode="numeric" maxlength="6" required></label>';
+  }else{
+    fields='<label class="f">मौजूदा पासवर्ड<input name="current" type="password" required autocomplete="current-password"></label>'+
+      '<label class="f">नया पासवर्ड<input name="newPass" type="password" required minlength="8" autocomplete="new-password"></label>'+
+      '<label class="f">नया पासवर्ड दोबारा<input name="confirmPass" type="password" required minlength="8" autocomplete="new-password"></label>';
+  }
+  var veil=el('<div class="veil" id="accountVeil" role="dialog" aria-modal="true"><div class="sheet"><div class="sh-h"><div><h3>'+title+'</h3><p class="note">जानकारी ध्यान से भरें और सेव करें।</p></div><button class="x" type="button" data-act="account-close">×</button></div><form id="accountForm" class="form form-card" data-kind="'+kind+'" data-target="'+(targetPhone||"")+'">'+fields+'<p class="err" id="accountErr" role="alert"></p><button class="btn" type="submit">सुरक्षित रूप से सेव करें</button></form></div></div>');
+  document.body.appendChild(veil);
+  veil.addEventListener("click",function(e){if(e.target===veil)veil.remove();});
+}
+
+/* ---- events ---- */
+document.addEventListener("input",function(e){if(e.target.id==="adminUserSearch"){var q=e.target.value.replace(/\D/g,"");document.querySelectorAll(".admin-user-card").forEach(function(card){card.style.display=(!q||card.getAttribute("data-phone").indexOf(q)!==-1)?"flex":"none";});}});
+document.addEventListener("click", function(e){
+  var b = e.target.closest("[data-act]"); if (!b) return;
+  var act = b.getAttribute("data-act"), v = b.getAttribute("data-v"), u = me();
+  if (act==="account-close"){var av=document.getElementById("accountVeil");if(av)av.remove();}
+  else if (act==="mode"){ authMode = v; render(); }
+  else if (act==="tab"){ location.hash = v; window.scrollTo(0,0); }
+  else if (act==="jump-section"){ var target=document.getElementById(v); if(target) target.scrollIntoView({behavior:"smooth",block:"start"}); }
+  else if(act==="toggle-transfer"){if(!adminUnlocked)return;db.settings.transferEnabled=db.settings.transferEnabled===false;save();render();}
+  else if(act==="toggle-referral"){if(!adminUnlocked)return;db.settings.referralEnabled=db.settings.referralEnabled===false;save();render();}
+  else if (act==="open"){ sheet = { aid: v, dir: "up", stake: 1000, result: null }; drawSheet(); }
+  else if (act==="close"){ closeSheet(); if (route==="home") render(); }
+  else if (act==="again"){ sheet.result = null; drawSheet(); }
+  else if (act==="chip"){ document.getElementById("stake").value = v; }
+  else if (act==="max-stake"){ var si=document.getElementById("stake"); if(si)si.value=Math.floor(availableOf(u)); }
+  else if (act==="dir"){ sheet.dir = v; sheet.stake = document.getElementById("stake").value; drawSheet(); }
+  else if (act==="start"){
+    var amt = Math.floor(Number(document.getElementById("stake").value)), err = document.getElementById("shErr");
+    if (u.lastDay===today()){ err.textContent = "आज की ट्रेड हो चुकी है। कल फिर करें।"; return; }
+    if (!amt || amt < MIN_STAKE){ err.textContent = "कम से कम ₹1,000 डालें।"; return; }
+    if (amt > availableOf(u)){ err.textContent = "उपलब्ध (अनलॉक) राशि कम है। आपके पास "+inr(availableOf(u))+" है।"; return; }
+    var a = byId(sheet.aid);
+    u.balance = Math.round((u.balance-amt)*100)/100;
+    u.active = { aid:a.id, dir:sheet.dir, stake:amt, entry:a.p, signalPct:(db.settings.signalAsset===a.id?4:0), end:Date.now()+TRADE_SECONDS*1000 };
+    u.lastDay = today();
+    save(); drawSheet();
+    var bl = document.getElementById("balAmt"); if (bl) bl.textContent = inr(u.balance);
+  }
+  else if (act==="wallet"){ openWalletDialog(v); }
+  else if (act==="copy"){
+    var done = function(){ b.textContent = "कॉपी हो गया"; setTimeout(function(){ b.textContent = "कॉपी"; }, 1500); };
+    try { navigator.clipboard.writeText(v).then(done, function(){ b.textContent = "कोड को दबाकर कॉपी करें"; }); }
+    catch(x){ b.textContent = "कोड को दबाकर कॉपी करें"; }
+  }
+  else if (act==="reset"){
+    var n = document.getElementById("resetNote");
+    if (b.getAttribute("data-ok")!=="1"){ b.setAttribute("data-ok","1"); b.textContent = "हाँ, रीसेट करें"; n.textContent = "पक्का रीसेट करना है? दोबारा बटन दबाएँ।"; return; }
+    if (u.active){ n.textContent = "चल रही ट्रेड पूरी होने के बाद रीसेट करें."; b.removeAttribute("data-ok"); b.textContent = "रीसेट करें"; return; }
+    u.balance = START_BALANCE; u.trades = []; save(); render();
+  }
+  else if (act==="pin-set"){ openAccountForm("pin"); }
+  else if (act==="bank-save"){ if(!u.securityPin){openAccountForm("pin");return;} openAccountForm("bank"); }
+  else if (act==="password-change"){ openAccountForm("password"); }
+  else if (act==="admin-login"){ openAdminDialog(); }
+  else if (act==="view-user-transactions"){ if(!adminUnlocked)return; adminTxPhone=b.getAttribute("data-user"); render(); }
+  else if (act==="close-user-transactions"){ adminTxPhone=null; render(); }
+  else if (act==="export-user-transactions"){
+    if(!adminUnlocked)return; var exu=db.users[b.getAttribute("data-user")];if(!exu)return;
+    var txrows=[["Date","Type","Amount","Status","Details"]];userTransactionRows(exu).forEach(function(r){txrows.push([r.date,r.type,r.amount,r.status,r.detail]);});
+    var txcsv="\uFEFF"+txrows.map(function(row){return row.map(function(v){return '"'+String(v==null?"":v).replace(/"/g,'""')+'"';}).join(",");}).join("\r\n");
+    var txblob=new Blob([txcsv],{type:"text/csv;charset=utf-8;"}),txurl=URL.createObjectURL(txblob),txa=document.createElement("a");txa.href=txurl;txa.download="Grow_India_Transactions_"+exu.phone+".csv";document.body.appendChild(txa);txa.click();txa.remove();URL.revokeObjectURL(txurl);
+  }
+  else if (act==="admin-bank"){
+    if(!adminUnlocked){showAppMessage("Admin login जरूरी है।");return;}
+    openAccountForm("bank",b.getAttribute("data-user"));
+  }
+  else if (act==="admin-pin-reset"){
+    if(!adminUnlocked){showAppMessage("Admin login जरूरी है।");return;}
+    var target=db.users[b.getAttribute("data-user")];if(!target)return;
+    var npin=window.prompt("यूज़र के लिए नया 4–6 अंकों का PIN सेट करें:");if(npin===null)return;
+    if(!/^\d{4,6}$/.test(npin)){showAppMessage("PIN 4–6 अंकों का होना चाहिए।");return;}
+    target.securityPin=hash(npin);target.pinResetAt=Date.now();save();render();showAppMessage("यूज़र का PIN रीसेट हो गया। नया PIN यूज़र को सुरक्षित तरीके से दें।");
+  }
+  else if (act==="admin-password"){
+    if(!adminUnlocked){showAppMessage("Admin login जरूरी है।");return;}
+    var target=db.users[b.getAttribute("data-user")];if(!target)return;
+    if(!window.confirm("+91 "+target.phone+" का पासवर्ड रीसेट करना है? पुराना पासवर्ड देखा नहीं जा सकता।"))return;
+    var np=window.prompt("नया अस्थायी पासवर्ड (कम से कम 8 अक्षर):");if(np===null)return;if(np.length<8){showAppMessage("कम से कम 8 अक्षर का पासवर्ड रखें।");return;}
+    target.pw=hash(np);target.passwordResetAt=Date.now();save();render();showAppMessage("पासवर्ड रीसेट हो गया। नया पासवर्ड यूज़र को सुरक्षित तरीके से दें।");
+  }
+  else if (act==="export-requests"){
+    if(!adminUnlocked){showAppMessage("Admin login जरूरी है।");return;}
+    var rows=[["Type","User Phone","Date","Status","Amount","Account Holder","Bank","IFSC","Full Account Number","UPI"]];
+    users.forEach(function(usr){(usr.requests||[]).forEach(function(req){var bk=req.bank||{};rows.push([req.type,usr.phone,req.date||"",req.status,req.amount,bk.name||"",bk.bankName||"",bk.ifsc||"",bk.account||"",bk.upi||""]);});});
+    var csv="\uFEFF"+rows.map(function(row){return row.map(function(v){return '"'+String(v==null?"":v).replace(/"/g,'""')+'"';}).join(",");}).join("\r\n");
+    var blob=new Blob([csv],{type:"text/csv;charset=utf-8;"}), url=URL.createObjectURL(blob), a=document.createElement("a");a.href=url;a.download="Grow_India_All_Requests.csv";document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
+  }
+  else if (act==="admin-logout"){adminUnlocked=false;location.hash="profile";route="profile";render();}
+  else if (act==="request-approve" || act==="request-reject"){
+    if(!adminUnlocked){showAppMessage("Admin login जरूरी है।");return;}
+    var found=findRequest(b.getAttribute("data-user"),b.getAttribute("data-request"));
+    if(!found||found.request.status!=="लंबित"){showAppMessage("यह अनुरोध पहले ही प्रोसेस हो चुका है।");return;}
+    if(act==="request-approve"){
+      if(found.request.type==="deposit"){
+        found.user.balance=Math.round((found.user.balance+found.request.amount)*100)/100;
+        found.user.depositHoldAmount=Math.round((depositHoldOf(found.user)+found.request.amount)*100)/100;
+        found.request.status="स्वीकृत · निकासी लॉक (Preview)";
+      }
+      else {
+        if(found.request.amount>withdrawableOf(found.user)){showAppMessage("निकासी योग्य प्रॉफिट/रिलीज़ बैलेंस पर्याप्त नहीं है। जमा की मूल राशि निकालने के लिए एडमिन रिलीज़ जरूरी है।");return;}
+        found.user.balance=Math.round((found.user.balance-found.request.amount)*100)/100;
+        found.request.status="स्वीकृत (Preview)";
+      }
+    } else found.request.status="अस्वीकृत (Preview)";
+    save();render();
+  }
+  else if (act==="admin-lock" || act==="admin-release"){
+    if(!adminUnlocked){showAppMessage("Admin login जरूरी है।");return;}
+    var target=db.users[b.getAttribute("data-user")];if(!target)return;
+    target.lockedAmount=lockedOf(target);
+    if(act==="admin-lock"){
+      var room=Math.max(0,Number(target.balance||0)-target.lockedAmount);
+      var lockRaw=window.prompt("कितनी राशि लॉक करनी है? अधिकतम "+inr(room)+" (Preview ₹):",""+room);
+      if(lockRaw===null)return;
+      var lockAmt=Number(String(lockRaw).replace(/[₹,\s]/g,""));
+      if(!Number.isFinite(lockAmt)||lockAmt<=0||lockAmt>room){showAppMessage("सही राशि दर्ज करें।");return;}
+      target.lockedAmount=Math.round((target.lockedAmount+lockAmt)*100)/100;
+    }else{
+      var releaseRaw=window.prompt("कितनी लॉक राशि रिलीज करनी है? लॉक राशि "+inr(target.lockedAmount)+" (Preview ₹):",""+target.lockedAmount);
+      if(releaseRaw===null)return;
+      var releaseAmt=Number(String(releaseRaw).replace(/[₹,\s]/g,""));
+      if(!Number.isFinite(releaseAmt)||releaseAmt<=0||releaseAmt>target.lockedAmount){showAppMessage("सही राशि दर्ज करें।");return;}
+      target.lockedAmount=Math.round((target.lockedAmount-releaseAmt)*100)/100;
+    }
+    save();render();
+  }
+  else if (act==="admin-deposit-release"){
+    if(!adminUnlocked){showAppMessage("Admin login जरूरी है।");return;}
+    var target=db.users[b.getAttribute("data-user")];if(!target)return;
+    var held=depositHoldOf(target);
+    if(held<=0){showAppMessage("इस यूज़र की कोई डिपॉज़िट राशि लॉक नहीं है।");return;}
+    var releaseRaw=window.prompt("कितनी जमा मूल राशि निकासी के लिए रिलीज़ करनी है? कुल लॉक: "+inr(held),String(held));
+    if(releaseRaw===null)return;
+    var releaseAmt=Number(String(releaseRaw).replace(/[₹,\s]/g,""));
+    if(!Number.isFinite(releaseAmt)||releaseAmt<=0||releaseAmt>held){showAppMessage("सही राशि दर्ज करें।");return;}
+    target.depositHoldAmount=Math.round((held-releaseAmt)*100)/100;
+    save();render();
+  }
+  else if (act==="admin-adjust"){
+    if(!adminUnlocked){showAppMessage("Admin login जरूरी है।");return;}
+    var target=db.users[b.getAttribute("data-user")];if(!target)return;
+    var raw=window.prompt("नया वॉलेट बैलेंस (Preview) दर्ज करें (₹):",String(target.balance));if(raw===null)return;
+    var next=Number(String(raw).replace(/[₹,\s]/g,""));if(!Number.isFinite(next)||next<0){showAppMessage("सही राशि दर्ज करें।");return;}
+    target.balance=Math.round(next*100)/100;save();render();
+  }
+  else if (act==="logout"){ closeSheet(); db.session = null; adminUnlocked=false; location.hash=""; save(); render(); }
+});
+document.addEventListener("submit", function(e){
+  if(e.target.id==="accountForm"){
+    e.preventDefault();
+    var f=e.target, data=new FormData(f), kind=f.dataset.kind, targetPhone=f.dataset.target, target=targetPhone?db.users[targetPhone]:me(), err=document.getElementById("accountErr");
+    if(!target){err.textContent="यूज़र नहीं मिला।";return;}
+    if(kind==="bank"){
+      var name=String(data.get("name")||"").trim(), bankName=String(data.get("bankName")||"").trim(), ifsc=String(data.get("ifsc")||"").trim().toUpperCase(), account=String(data.get("account")||"").trim(), confirm=String(data.get("confirm")||"").trim(), upi=String(data.get("upi")||"").trim();
+      if(!name||!bankName||!/^[A-Z]{4}0[A-Z0-9]{6}$/.test(ifsc)||!/^\d{6,20}$/.test(account)||account!==confirm){err.textContent="नाम, बैंक, सही IFSC और मेल खाते हुए 6–20 अंकों के खाता नंबर भरें।";return;}
+      if(!targetPhone){var pin=String(data.get("pin")||"");if(!target.securityPin||hash(pin)!==target.securityPin){err.textContent="सुरक्षा PIN गलत है।";return;}}
+      target.bank={name:name,bankName:bankName,ifsc:ifsc,account:account,upi:upi,updatedAt:Date.now(),updatedBy:targetPhone?"admin":"user"};
+    }else if(kind==="pin"){
+      var oldPin=String(data.get("oldPin")||""), newPin=String(data.get("newPin")||""), confirmPin=String(data.get("confirmPin")||"");
+      if(target.securityPin&&hash(oldPin)!==target.securityPin){err.textContent="मौजूदा PIN गलत है।";return;}
+      if(!/^\d{4,6}$/.test(newPin)||newPin!==confirmPin){err.textContent="PIN 4–6 अंक का हो और दोनों बार समान हो।";return;}
+      target.securityPin=hash(newPin);
+    }else{
+      var current=String(data.get("current")||""), np=String(data.get("newPass")||""), cp=String(data.get("confirmPass")||"");
+      if(hash(current)!==target.pw){err.textContent="मौजूदा पासवर्ड गलत है।";return;}
+      if(np.length<8||np!==cp){err.textContent="नया पासवर्ड कम से कम 8 अक्षर का हो और दोनों बार समान हो।";return;}
+      target.pw=hash(np);
+    }
+    save();var modal=document.getElementById("accountVeil");if(modal)modal.remove();render();showAppMessage(kind==="pin"?"आपका सुरक्षा PIN सुरक्षित रूप से सेव हो गया है।":kind==="bank"?"आपके बैंक विवरण अपडेट हो गए हैं।":"आपका पासवर्ड अपडेट हो गया है।",{title:kind==="pin"?"सुरक्षा PIN सेट हो गया": "जानकारी सेव हो गई",type:"success"});
+  }
+  if(e.target.id==="settingsForm"){
+    e.preventDefault();if(!adminUnlocked){showAppMessage("Admin login जरूरी है।");return;}
+    var fd=new FormData(e.target);Object.keys(CONFIG).forEach(function(k){CONFIG[k]=String(fd.get(k)||"").trim();});
+    var photo=e.target.elements.adPhoto && e.target.elements.adPhoto.files[0];
+    function persistSettings(){db.settings=db.settings||{};Object.keys(CONFIG).forEach(function(k){db.settings[k]=CONFIG[k];});save();render();showAppMessage("ऐप लिंक और बैनर सेटिंग सेव हो गई।");}
+    if(photo){if(photo.size>1500000){showAppMessage("फोटो 1.5 MB से छोटी रखें।");return;}var reader=new FileReader();reader.onload=function(){CONFIG.adImage=String(reader.result);persistSettings();};reader.onerror=function(){showAppMessage("फोटो पढ़ी नहीं जा सकी।");};reader.readAsDataURL(photo);}else persistSettings();
+  }
+  if(e.target.classList && e.target.classList.contains("admin-payment-form")){
+    e.preventDefault();
+    if(!adminUnlocked){showAppMessage("Admin login जरूरी है।");return;}
+    var pf=new FormData(e.target), file=pf.get("paymentPhoto"), upi=String(pf.get("paymentUpi")||"").trim();
+    var reqUser=db.users[e.target.getAttribute("data-user")], reqId=e.target.getAttribute("data-request");
+    var reqObj=reqUser && (reqUser.requests||[]).find(function(x){return String(x.id)===String(reqId);});
+    if(!reqObj || reqObj.status!=="लंबित"){showAppMessage("यह अनुरोध उपलब्ध नहीं है।");return;}
+    if(!file || !file.size || !/^[^\\s@]+@[^\\s@]+$/.test(upi)){showAppMessage("सही फोटो और UPI ID डालें।");return;}
+    if(file.size>1500000){showAppMessage("फोटो 1.5 MB से छोटी रखें।");return;}
+    var reader=new FileReader();
+    reader.onload=function(){reqObj.paymentPhoto=String(reader.result);reqObj.paymentUpi=upi;reqObj.paymentInfoSent=true;reqObj.paymentExpiresAt=Date.now()+600000;save();render();showAppMessage("Payment फोटो और UPI यूज़र को दिखा दिए गए हैं।");};
+    reader.onerror=function(){showAppMessage("फोटो पढ़ी नहीं जा सकी।");};
+    reader.readAsDataURL(file);
+  }
+  if(e.target.id==="transferForm"){
+    e.preventDefault();
+    if(db.settings.transferEnabled===false){showAppMessage("ट्रांसफर सुविधा एडमिन ने बंद की है।");return;}
+    var fd2=new FormData(e.target), to=String(fd2.get("toPhone")||"").replace(/\D/g,""), amount=Math.floor(Number(fd2.get("amount"))), sender=me(), recipient=db.users[to], er=document.getElementById("transferErr");
+    if(!/^[6-9]\d{9}$/.test(to)){er.textContent="सही 10 अंकों का मोबाइल नंबर डालें।";return;}
+    if(to===sender.phone){er.textContent="अपने ही नंबर पर ट्रांसफर नहीं कर सकते।";return;}
+    if(!recipient){er.textContent="इस नंबर की User ID नहीं मिली।";return;}
+    if(!Number.isFinite(amount)||amount<=0){er.textContent="सही राशि दर्ज करें।";return;}
+    if(amount>withdrawableOf(sender)){er.textContent="इतना ट्रांसफर योग्य बैलेंस नहीं है। जमा की लॉक मूल राशि ट्रांसफर नहीं हो सकती।";return;}
+    if(!consumeTransferApproval(sender,to,amount)){requestTransferPin(e.target,sender,to,amount);return;}
+    sender.balance=Math.round((sender.balance-amount)*100)/100;recipient.balance=Math.round((recipient.balance+amount)*100)/100;
+    var stamp=new Date().toLocaleString("hi-IN");sender.transfers=sender.transfers||[];recipient.transfers=recipient.transfers||[];
+    sender.transfers.unshift({direction:"sent",otherPhone:to,amount:amount,date:stamp,createdAt:Date.now()});recipient.transfers.unshift({direction:"received",otherPhone:sender.phone,amount:amount,date:stamp,createdAt:Date.now()});
+    save();render();showAppMessage("प्राप्तकर्ता की User ID: "+to,{title:"ट्रांसफर सफल हुआ",type:"success",amount:inr(amount),note:"लोकल प्रीव्यू ट्रांसफर · वास्तविक भुगतान नहीं हुआ।"});
+  }
+  if (e.target.id==="authForm"){ e.preventDefault(); submitAuth(); }
+});
+function onHash(){
+  var h = (location.hash||"").replace("#","");
+  route = h.indexOf("deposit/")===0 ? "deposit" : (h==="refer"||h==="profile"||h==="transfer") ? h : (h==="admin" && adminUnlocked ? "admin" : "home");
+  render();
+}
+window.addEventListener("hashchange", onHash);
+setInterval(function(){
+  document.querySelectorAll(".deposit-timer").forEach(function(node){
+    var left=Math.max(0,Number(node.getAttribute("data-expiry")||0)-Date.now());
+    var mins=Math.floor(left/60000),secs=Math.floor((left%60000)/1000);
+    node.textContent=left>0?(String(mins).padStart(2,"0")+":"+String(secs).padStart(2,"0")+" शेष"):"समय पूरा";
+  });
+},1000);
+
+var adminSection='dashboard';
+function adminNavigation(){return '<nav class="admin-nav">'+[['dashboard','डैशबोर्ड'],['deposit','Deposit'],['withdraw','Withdrawal'],['signal','सिग्नल'],['settings','ऐप / Ads'],['users','यूज़र'],['referral','कमीशन'],['earnings','कमाई']].map(function(x){return '<button data-act="admin-section" data-v="'+x[0]+'" class="'+(adminSection===x[0]?'selected':'')+'">'+x[1]+'</button>';}).join('')+'</nav>';}
+function adminView(){
+ var root=document.createElement('div');root.innerHTML=originalAdminView();if(!adminUnlocked)return root.innerHTML;
+ var header=root.querySelector('.sh-h'),out=header?header.outerHTML:'',cards=Array.from(root.querySelectorAll('.card'));
+ if(adminSection==='dashboard'){root.querySelectorAll('.admin-stat').forEach(function(n){out+=n.outerHTML;});out+='<div class="card"><h2>एडमिन कंट्रोल</h2><p>नीचे के छोटे मेनू बटन से सेक्शन खोलें।</p></div>';}
+ var titles={deposit:'Deposit / Withdrawal Requests',withdraw:'Deposit / Withdrawal Requests',settings:'ऐप कंटेंट और लिंक सेटिंग',users:'यूज़र अकाउंट्स',referral:'Referral Details'};
+ if(titles[adminSection]){var card=cards.find(function(c){var h=c.querySelector('h2');return h&&h.textContent===titles[adminSection];});if(card){
+  if(adminSection==='deposit'||adminSection==='withdraw'){
+   card.querySelector('h2').textContent=adminSection==='deposit'?'Deposit Requests':'Withdrawal Requests';
+   card.querySelectorAll('.row').forEach(function(row){var title=row.querySelector('strong');if(!title)return;var dep=title.textContent==='Deposit Request';if(dep!==(adminSection==='deposit')){row.remove();return;}
+    row.classList.add('request-card');var action=row.querySelector('[data-request]');if(!action)return;
+    var u=db.users[action.dataset.user],q=u&&(u.requests||[]).find(function(q){return String(q.id)===action.dataset.request;});
+    if(!q)return;
+    if(dep){var proof=document.createElement('div');proof.className='inline-proof';
+     proof.innerHTML='<h3>Payment Proof</h3><p>Request ID: '+safeText(q.id)+'</p>'+(q.proofPhoto?'<p>UTR: '+safeText(q.utr||'')+'</p><img class="payment-image" src="'+safeText(q.proofPhoto)+'" alt="भुगतान स्क्रीनशॉट"><a class="btn sm" download="Payment-Proof-'+safeText(q.id)+'.'+(q.proofPhoto.indexOf('image/png')>=0?'png':q.proofPhoto.indexOf('image/webp')>=0?'webp':'jpg')+'" href="'+safeText(q.proofPhoto)+'">प्रमाण डाउनलोड करें</a><p class="note">Approve से पहले भुगतान की स्वतंत्र जाँच करें।</p>':'<p class="note">यूज़र ने अभी प्रमाण जमा नहीं किया है।</p>');row.appendChild(proof);}
+   });
+   // Completed requests have no action button: locate them by the already-rendered user/date and attach proof.
+   if(adminSection==='deposit')card.querySelectorAll('.request-card').forEach(function(row){if(row.querySelector('.inline-proof'))return;Object.keys(db.users).some(function(k){return (db.users[k].requests||[]).some(function(q){if(q.type!=='deposit'||!row.textContent.includes(k+' · '+(q.date||''))||!q.proofPhoto)return false;var proof=document.createElement('div');proof.className='inline-proof';proof.innerHTML='<h3>Payment Proof</h3><p>Request: '+safeText(q.id)+' · UTR: '+safeText(q.utr||'')+'</p><img class="payment-image" src="'+safeText(q.proofPhoto)+'" alt="Payment proof"><a class="btn sm" download="proof-'+safeText(q.id)+'.'+(q.proofPhoto.indexOf('image/png')>=0?'png':q.proofPhoto.indexOf('image/webp')>=0?'webp':'jpg')+'" href="'+safeText(q.proofPhoto)+'">प्रमाण डाउनलोड करें</a>';row.appendChild(proof);return true;});});});
+  }out+=card.outerHTML;}
+  if(adminSection==='users'){var f=cards.find(function(c){return c.querySelector('h2')&&c.querySelector('h2').textContent==='फीचर कंट्रोल';});if(f)out+=f.outerHTML;if(adminTxPhone)out+=adminUserTransactionView(adminTxPhone);}
+ }
+ if(adminSection==='signal')out+='<div class="card"><h2>डेमो सिग्नल सेटिंग</h2><p class="note">यह एडमिन-नियंत्रित सिमुलेशन है, वास्तविक बाजार रिटर्न नहीं। नई ट्रेड शुरू होते समय नियम लॉक होता है; चलती ट्रेड नहीं बदलेगी।</p><form id="signalForm" class="form"><label class="f">4% डेमो लाभ वाला एसेट<select name="asset"><option value="">कोई सिग्नल नहीं · सभी पर 0%</option>'+ASSETS.map(function(a){return '<option value="'+a.id+'" '+(db.settings.signalAsset===a.id?'selected':'')+'>'+a.sym+' · '+a.name+'</option>';}).join('')+'</select></label><p>चुने एसेट पर 4%, बाकी पर 0% लाभ। 0% में मूल ट्रेड राशि वापस मिलेगी।</p><button class="btn sm">सिग्नल सेव करें</button></form></div>';
+ if(adminSection==='earnings'){var net=0;out+='<div class="card"><h2>यूज़र ट्रेडिंग नेट P/L</h2>';Object.keys(db.users).forEach(function(k){var p=(db.users[k].trades||[]).reduce(function(a,t){return a+Number(t.pnl||0);},0);net+=p;out+='<div class="row"><span>'+safeText(k)+'</span><strong>'+inr(p)+'</strong></div>';});out+='<h3>कुल: '+inr(net)+'</h3><p class="note">यह ऐप मालिक का लाभ नहीं है। Deposit, Withdrawal और Referral अलग हैं।</p></div>';}
+ return out;
+}
+function depositPage(u){
+ var id=(location.hash||'').split('/')[1],q=(u.requests||[]).find(function(q){return String(q.id)===id&&q.type==='deposit';});if(!q)return '<div class="card">रिक्वेस्ट नहीं मिली।</div>';
+ var expiry=q.paymentInfoSent?q.paymentExpiresAt:q.expiresAt;
+ return '<div class="card"><h2>Deposit Payment · '+inr(q.amount)+'</h2><p>Request: '+safeText(q.id)+' · '+safeText(q.status)+'</p>'+(q.status==='लंबित'?'<div class="deposit-timer" data-expiry="'+Number(expiry||0)+'">टाइमर लोड हो रहा है…</div><p class="note">समय पूरा होने पर ऑटो अप्रूवल/रद्द नहीं होगा।</p>':'')+(q.paymentInfoSent?'<img class="payment-image" src="'+safeText(q.paymentPhoto||'')+'" alt="Payment QR"><p>UPI: '+safeText(q.paymentUpi||'')+'</p>':'<p>एडमिन से QR/UPI का इंतज़ार है।</p>')+(q.proofPhoto?'<p>प्रमाण जमा है · UTR: '+safeText(q.utr||'')+'</p><img class="payment-image" src="'+safeText(q.proofPhoto)+'" alt="आपका प्रमाण">':'')+(q.status==='लंबित'?'<form id="proofForm" data-request="'+safeText(q.id)+'" class="form"><label class="f">UTR / Transaction ID<input name="utr" required minlength="6" maxlength="64"></label><label class="f">स्क्रीनशॉट · JPG/PNG/WebP, अधिकतम 1 MB<input type="file" name="photo" accept="image/png,image/jpeg,image/webp" required></label><button class="btn sm">प्रमाण जमा करें</button></form>':'')+'</div>';
+}
+document.addEventListener('click',function(e){var b=e.target.closest('[data-act="admin-section"]');if(b&&adminUnlocked){adminSection=b.dataset.v;render();window.scrollTo(0,0);}});
+document.addEventListener('submit',function(e){
+ if(e.target.id==='signalForm'){e.preventDefault();if(!adminUnlocked)return;var aid=new FormData(e.target).get('asset');if(aid&&!byId(aid))return;db.settings.signalAsset=aid;save();render();return;}
+ if(e.target.id!=='proofForm')return;e.preventDefault();var form=e.target,u=me(),q=u&&(u.requests||[]).find(function(q){return String(q.id)===form.dataset.request;}),d=new FormData(form),f=d.get('photo'),utr=String(d.get('utr')||'').trim();
+ if(!q||q.status!=='लंबित')return;if(!/^[A-Za-z0-9-]{6,64}$/.test(utr)||!f||!f.size||f.size>1000000||!/^image\/(png|jpeg|webp)$/.test(f.type)){showAppMessage('सही UTR और 1 MB तक की JPG/PNG/WebP फोटो चुनें।');return;}
+ var reader=new FileReader();reader.onload=function(){var old=[q.utr,q.proofPhoto,q.proofSubmittedAt];q.utr=utr;q.proofPhoto=String(reader.result);q.proofSubmittedAt=Date.now();try{save();render();showAppMessage('प्रमाण जमा हुआ।');}catch(err){q.utr=old[0];q.proofPhoto=old[1];q.proofSubmittedAt=old[2];showAppMessage('स्टोरेज भर गया है। छोटी फोटो चुनें।');}};reader.readAsDataURL(f);
+});
+
+
+var transferApproval=null;
+function closeActionDialog(){var d=document.getElementById('actionDialog');if(d)d.remove();transferApproval=null;}
+function actionDialog(title,content,submit){
+ closeActionDialog();var previous=document.activeElement,d=document.createElement('dialog');d.id='actionDialog';d.className='action-dialog';
+ d.innerHTML='<form id="actionDialogForm" class="form"><div class="dialog-title"><h2>'+title+'</h2><button type="button" class="dialog-close" aria-label="बंद करें">×</button></div>'+content+'<p id="actionError" class="err" role="alert" aria-live="polite"></p><div class="dialog-actions"><button type="button" class="btn ghost dialog-cancel">रद्द करें</button><button class="btn" type="submit">आगे बढ़ें</button></div></form>';
+ document.body.appendChild(d);d.querySelector('.dialog-close').onclick=closeActionDialog;d.querySelector('.dialog-cancel').onclick=closeActionDialog;
+ d.addEventListener('click',function(e){if(e.target===d){var r=d.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)closeActionDialog();}});
+ d.addEventListener('cancel',function(){transferApproval=null;});d.addEventListener('close',function(){d.remove();if(previous&&previous.isConnected)previous.focus();});
+ d.querySelector('form').onsubmit=function(e){e.preventDefault();submit(new FormData(e.target),d.querySelector('#actionError'));};d.showModal();
+ setTimeout(function(){var input=d.querySelector('input');if(input)input.focus();},30);return d;
+}
+function openAdminDialog(){
+ actionDialog('एडमिन लॉगिन','<p class="note">जारी रखने के लिए अपना Admin PIN दर्ज करें।</p><label class="f" for="adminPinInput">Admin PIN<input id="adminPinInput" name="pin" class="pin-input" type="password" inputmode="numeric" pattern="[0-9]{4,12}" maxlength="12" autocomplete="off" required placeholder="••••••"></label>',function(fd,err){
+ if(String(fd.get('pin'))!==String(ADMIN_PIN)){err.textContent='गलत Admin PIN। दोबारा कोशिश करें।';return;}closeActionDialog();adminUnlocked=true;route='admin';location.hash='admin';render();
+ });
+}
+function openWalletDialog(kind){
+ var u=me();if(!u||!['deposit','withdraw'].includes(kind))return;
+ var withdrawal=kind==='withdraw';
+ var d=actionDialog(withdrawal?'पैसे निकालें':'पैसे जमा करें','<div class="wallet-summary"><span>निकासी योग्य बैलेंस</span><strong>'+inr(withdrawableOf(u))+'</strong></div><label class="f" for="walletAmount">राशि दर्ज करें (₹)<div class="money-input"><span>₹</span><input id="walletAmount" name="amount" type="number" inputmode="numeric" min="1" step="1" required placeholder="0"></div></label><div class="amount-options">'+[500,1000,2000,5000].map(function(n){return '<button type="button" data-amount="'+n+'">₹'+n.toLocaleString('en-IN')+'</button>';}).join('')+'</div><p class="note">'+(withdrawal?'निकासी के लिए बैंक विवरण जरूरी हैं। जमा की लॉक मूल राशि उपलब्ध नहीं है।':'अगले पेज पर पेमेंट जानकारी और प्रमाण जमा करने का विकल्प मिलेगा।')+'</p>',function(fd,err){
+ var current=me(),amount=Number(fd.get('amount'));
+ if(!current||current.phone!==u.phone){err.textContent='सेशन बदल गया है। फिर कोशिश करें।';return;}
+ if(!Number.isSafeInteger(amount)||amount<=0){err.textContent='सही पूरी राशि दर्ज करें।';return;}
+ if(withdrawal&&!current.bank){err.textContent='पहले प्रोफ़ाइल में बैंक विवरण जोड़ें।';return;}
+ if(withdrawal&&amount>withdrawableOf(current)){err.textContent='निकासी योग्य बैलेंस पर्याप्त नहीं है।';return;}
+ var req={id:String(Date.now())+String(Math.floor(Math.random()*10000)),type:kind,amount:amount,bank:withdrawal?Object.assign({},current.bank):null,status:'लंबित',date:new Date().toLocaleString('hi-IN'),createdAt:Date.now()};
+ if(!withdrawal){req.expiresAt=Date.now()+600000;req.paymentInfoSent=false;}
+ current.requests=current.requests||[];current.requests.unshift(req);try{save();}catch(e){current.requests.shift();err.textContent='रिक्वेस्ट सेव नहीं हुई। स्टोरेज जाँचें।';return;}
+ closeActionDialog();if(!withdrawal){route='deposit';location.hash='deposit/'+req.id;}render();if(withdrawal)showAppMessage('निकासी अनुरोध दर्ज हो गया।');
+ });
+ d.querySelectorAll('[data-amount]').forEach(function(b){b.onclick=function(){d.querySelector('[name="amount"]').value=b.dataset.amount;};});
+}
+function consumeTransferApproval(sender,to,amount){
+ var ok=transferApproval&&transferApproval.sender===sender.phone&&transferApproval.to===to&&transferApproval.amount===amount&&transferApproval.pinHash===sender.securityPin&&transferApproval.until>Date.now();transferApproval=null;return !!ok;
+}
+function requestTransferPin(form,sender,to,amount){
+ if(!sender.securityPin){var err=document.getElementById('transferErr');if(err)err.textContent='पहले प्रोफ़ाइल में सुरक्षा PIN सेट करें।';return;}
+ actionDialog('ट्रांसफर की पुष्टि','<div class="wallet-summary"><span>प्राप्तकर्ता: '+safeText(to)+'</span><strong>'+inr(amount)+'</strong></div><label class="f" for="transferPinInput">अपना सुरक्षा PIN डालें<input id="transferPinInput" class="pin-input" name="pin" type="password" inputmode="numeric" pattern="[0-9]{4,6}" maxlength="6" autocomplete="off" required placeholder="••••••"></label><p class="note">यह आपका यूज़र सुरक्षा PIN है, Admin PIN नहीं।</p>',function(fd,err){
+ var current=me();if(!current||current.phone!==sender.phone){err.textContent='सेशन बदल गया है। दोबारा शुरू करें।';return;}
+ if(hash(String(fd.get('pin')||''))!==current.securityPin){err.textContent='गलत सुरक्षा PIN। पैसे ट्रांसफर नहीं हुए।';return;}
+ var fresh=new FormData(form),freshTo=String(fresh.get('toPhone')||'').replace(/\D/g,''),freshAmount=Math.floor(Number(fresh.get('amount')));
+ if(!form.isConnected||freshTo!==to||freshAmount!==amount){err.textContent='ट्रांसफर विवरण बदल गए हैं। रद्द करके दोबारा शुरू करें।';return;}
+ closeActionDialog();transferApproval={sender:current.phone,to:to,amount:amount,pinHash:current.securityPin,until:Date.now()+3000};try{form.requestSubmit();}finally{transferApproval=null;}
+ });
+}
+
+
+function showAppMessage(message,options){
+ options=options||{};message=String(message||'');
+ var success=options.type==='success'||(!options.type&&/सेव हो|सफल|जमा हुआ|दर्ज हो|रीसेट हो|दिखा दिए/.test(message));
+ var prev=document.getElementById('appMessageDialog');if(prev)prev.remove();
+ var previous=document.activeElement,d=document.createElement('dialog');d.id='appMessageDialog';d.className='app-message '+(success?'message-success':'message-info');
+ var icon=success?'<path d="m7 12 3 3 7-7"/>':'<path d="M12 10v6M12 7h.01"/>';
+ d.innerHTML='<div class="message-mark" aria-hidden="true"><svg viewBox="0 0 24 24">'+icon+'</svg></div><h2 id="messageTitle"></h2><div class="message-amount"></div><p id="messageBody"></p><p class="message-note"></p><button class="btn message-ok" type="button">ठीक है</button>';
+ d.querySelector('h2').textContent=options.title||(success?'पूरा हो गया':'कृपया ध्यान दें');d.querySelector('#messageBody').textContent=message;
+ var amount=d.querySelector('.message-amount');if(options.amount)amount.textContent=options.amount;else amount.remove();
+ var note=d.querySelector('.message-note');if(options.note)note.textContent=options.note;else note.remove();
+ d.setAttribute('aria-labelledby','messageTitle');d.setAttribute('aria-describedby','messageBody');
+ d.querySelector('button').onclick=function(){d.close();};d.addEventListener('close',function(){d.remove();if(previous&&previous.isConnected)previous.focus();});
+ document.body.appendChild(d);d.showModal();d.querySelector('button').focus();
+}
+
+initServerData();
+</script>
